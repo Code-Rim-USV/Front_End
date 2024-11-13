@@ -1,0 +1,165 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Stefan\\source\\repos\\Front_End\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\router\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\router\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RejectedRequestDialogue.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\RejectedRequestDialogue.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\AcceptedRequestDialogue.vue||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\AcceptedRequestDialogue.vue||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ScheduleExamHourInput.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\ScheduleExamHourInput.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RadiusButton.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\RadiusButton.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\StudentSidebar.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\StudentSidebar.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ProfessorSidebar.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\ProfessorSidebar.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\GroupLeaderSidebar.vue||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\GroupLeaderSidebar.vue||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RejectedExamsGrid.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\RejectedExamsGrid.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "index.js",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\router\\index.js",
+              "RelativeDocumentMoniker": "src\\router\\index.js",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\router\\index.js",
+              "RelativeToolTip": "src\\router\\index.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-11-13T18:51:16.263Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RejectedRequestDialogue.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RejectedRequestDialogue.vue",
+              "RelativeDocumentMoniker": "src\\components\\RejectedRequestDialogue.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RejectedRequestDialogue.vue",
+              "RelativeToolTip": "src\\components\\RejectedRequestDialogue.vue",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2024-11-13T18:50:26.856Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AcceptedRequestDialogue.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\AcceptedRequestDialogue.vue",
+              "RelativeDocumentMoniker": "src\\components\\AcceptedRequestDialogue.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\AcceptedRequestDialogue.vue",
+              "RelativeToolTip": "src\\components\\AcceptedRequestDialogue.vue",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2024-11-13T18:49:26.376Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ScheduleExamHourInput.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ScheduleExamHourInput.vue",
+              "RelativeDocumentMoniker": "src\\components\\ScheduleExamHourInput.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ScheduleExamHourInput.vue",
+              "RelativeToolTip": "src\\components\\ScheduleExamHourInput.vue",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2024-11-13T18:49:19.027Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RadiusButton.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RadiusButton.vue",
+              "RelativeDocumentMoniker": "src\\components\\RadiusButton.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RadiusButton.vue",
+              "RelativeToolTip": "src\\components\\RadiusButton.vue",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2024-11-13T18:48:26.107Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "StudentSidebar.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\StudentSidebar.vue",
+              "RelativeDocumentMoniker": "src\\components\\StudentSidebar.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\StudentSidebar.vue",
+              "RelativeToolTip": "src\\components\\StudentSidebar.vue",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2024-11-13T18:46:04.723Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProfessorSidebar.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ProfessorSidebar.vue",
+              "RelativeDocumentMoniker": "src\\components\\ProfessorSidebar.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ProfessorSidebar.vue",
+              "RelativeToolTip": "src\\components\\ProfessorSidebar.vue",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2024-11-13T18:45:43.441Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "GroupLeaderSidebar.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\GroupLeaderSidebar.vue",
+              "RelativeDocumentMoniker": "src\\components\\GroupLeaderSidebar.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\GroupLeaderSidebar.vue",
+              "RelativeToolTip": "src\\components\\GroupLeaderSidebar.vue",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2024-11-13T18:44:21.7Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "RejectedExamsGrid.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RejectedExamsGrid.vue",
+              "RelativeDocumentMoniker": "src\\components\\RejectedExamsGrid.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\RejectedExamsGrid.vue",
+              "RelativeToolTip": "src\\components\\RejectedExamsGrid.vue",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2024-11-13T18:36:59.388Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
