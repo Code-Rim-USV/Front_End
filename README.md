@@ -31,6 +31,10 @@ For more configuration options, see the [Vite Configuration Reference](https://v
 npm install
 ```
 
+```sh
+npm install vue-router
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh
