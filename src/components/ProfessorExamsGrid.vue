@@ -1,12 +1,12 @@
 <template>
-  <div class="exams-grid">
+  <div class="professor-exams-grid">
     <h2>Examene</h2>
     <div class="table-container">
       <table>
         <thead>
           <tr>
             <th>Materia</th>
-            <th>Profesor</th>
+            <th>Grupa</th>
             <th>Asistent</th>
             <th>Sala</th>
             <th>Data</th>
@@ -17,7 +17,7 @@
           <!-- Dynamically populated rows from the exams list -->
           <tr v-for="exam in exams" :key="exam.id">
             <td>{{ exam.material }}</td>
-            <td>{{ exam.professor }}</td>
+            <td>{{ exam.group }}</td>
             <td>{{ exam.assistant }}</td>
             <td>{{ exam.room }}</td>
             <td>{{ exam.date }}</td>
@@ -31,17 +31,17 @@
 
 <script>
 export default {
-  name: 'ExamsGridComponent',
+  name: 'ProfessorExamsGridComponent', // Multi-word component name
   data() {
     return {
       exams: [
-        { id: 1, material: 'Sisteme Inteligente', professor: 'Turcu Corneliu', assistant: 'Ovidiu Gherman', room: 'C202', date: '22.11.2024', time: '12:00' },
-        { id: 2, material: 'Baze de Date', professor: 'Ionescu Ana', assistant: 'Marin Bogdan', room: 'C203', date: '25.11.2024', time: '14:00' },
-        { id: 3, material: 'Algoritmi și Structuri de Date', professor: 'Popescu Mihai', assistant: 'Sima Elena', room: 'C204', date: '27.11.2024', time: '09:00' },
-        { id: 4, material: 'Tehnologii Web', professor: 'Stanescu Radu', assistant: 'Gheorghe Ion', room: 'C205', date: '29.11.2024', time: '10:00' },
-        { id: 5, material: 'Calculatoare Paralele', professor: 'Ilie Vasile', assistant: 'Petrache Clara', room: 'C206', date: '03.12.2024', time: '15:00' },
-        { id: 6, material: 'Rețele de Calculatoare', professor: 'Mihaila George', assistant: 'Munteanu Daniel', room: 'C207', date: '06.12.2024', time: '11:00' },
-        { id: 7, material: 'Sisteme de Operare', professor: 'Dima Alina', assistant: 'Lupu Florin', room: 'C208', date: '10.12.2024', time: '13:00' },
+        { id: 1, material: 'Sisteme Inteligente', group: '3141', assistant: 'Ovidiu Gherman', room: 'C202', date: '22.11.2024', time: '12:00' },
+        { id: 2, material: 'Baze de Date', group: '3142', assistant: 'Marin Bogdan', room: 'C203', date: '25.11.2024', time: '14:00' },
+        { id: 3, material: 'Algoritmi și Structuri de Date', group: '3143', assistant: 'Sima Elena', room: 'C204', date: '27.11.2024', time: '09:00' },
+        { id: 4, material: 'Tehnologii Web', group: '3144', assistant: 'Gheorghe Ion', room: 'C205', date: '29.11.2024', time: '10:00' },
+        { id: 5, material: 'Calculatoare Paralele', group: '3121', assistant: 'Petrache Clara', room: 'C206', date: '03.12.2024', time: '15:00' },
+        { id: 6, material: 'Rețele de Calculatoare', group: '3131', assistant: 'Munteanu Daniel', room: 'C207', date: '06.12.2024', time: '11:00' },
+        { id: 7, material: 'Sisteme de Operare', group: '3114', assistant: 'Lupu Florin', room: 'C208', date: '10.12.2024', time: '13:00' },
       ],
     };
   },
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style scoped>
-.exams-grid {
+.professor-exams-grid {
   width: 90%;
   margin: 0 auto;
   padding: 20px;
