@@ -6,6 +6,6 @@
     "\\src\\router",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\views\\SimpleStudentView.vue",
+  "SelectedNode": "\\src\\components\\ExamRequestDropInput.vue",
   "PreviewInSolutionExplorer": false
 }
