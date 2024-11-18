@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Stefan\\source\\repos\\Front_End\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ExamRequestDropInput.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\ExamRequestDropInput.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\views\\ProfessorView.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\views\\ProfessorView.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ExamRequestsGrid.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\ExamRequestsGrid.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\views\\GroupLeaderView.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\views\\GroupLeaderView.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ScheduleExamHourInput.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\ScheduleExamHourInput.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\router\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\router\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,39 +27,41 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ExamRequestDropInput.vue",
-              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ExamRequestDropInput.vue",
-              "RelativeDocumentMoniker": "src\\components\\ExamRequestDropInput.vue",
-              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ExamRequestDropInput.vue",
-              "RelativeToolTip": "src\\components\\ExamRequestDropInput.vue",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAGAAAAAAAAAA==",
+              "Title": "ProfessorView.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\views\\ProfessorView.vue",
+              "RelativeDocumentMoniker": "src\\views\\ProfessorView.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\views\\ProfessorView.vue",
+              "RelativeToolTip": "src\\views\\ProfessorView.vue",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
-              "WhenOpened": "2024-11-17T11:29:04.318Z",
+              "WhenOpened": "2024-11-18T16:25:58.031Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ExamRequestsGrid.vue",
-              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ExamRequestsGrid.vue",
-              "RelativeDocumentMoniker": "src\\components\\ExamRequestsGrid.vue",
-              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ExamRequestsGrid.vue",
-              "RelativeToolTip": "src\\components\\ExamRequestsGrid.vue",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "GroupLeaderView.vue",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\views\\GroupLeaderView.vue",
+              "RelativeDocumentMoniker": "src\\views\\GroupLeaderView.vue",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\views\\GroupLeaderView.vue",
+              "RelativeToolTip": "src\\views\\GroupLeaderView.vue",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
-              "WhenOpened": "2024-11-17T11:29:00.791Z"
+              "WhenOpened": "2024-11-18T16:24:30.621Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "ScheduleExamHourInput.vue",
-              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ScheduleExamHourInput.vue",
-              "RelativeDocumentMoniker": "src\\components\\ScheduleExamHourInput.vue",
-              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\components\\ScheduleExamHourInput.vue",
-              "RelativeToolTip": "src\\components\\ScheduleExamHourInput.vue",
+              "Title": "index.js",
+              "DocumentMoniker": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\router\\index.js",
+              "RelativeDocumentMoniker": "src\\router\\index.js",
+              "ToolTip": "C:\\Users\\Stefan\\source\\repos\\Front_End\\src\\router\\index.js",
+              "RelativeToolTip": "src\\router\\index.js",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
-              "WhenOpened": "2024-11-17T11:28:49.919Z"
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-11-18T16:07:56.299Z",
+              "EditorCaption": ""
             }
           ]
         }
