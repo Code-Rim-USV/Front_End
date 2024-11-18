@@ -1,60 +1,119 @@
 <template>
-    <div class="layout">
-        <!-- Sidebar -->
-        <StudentSidebar />
-
-        <!-- Main content area -->
-        <div class="student-view">
-            <Calendar />
-            <ExamsGrid />
+    <div class="exam-request-form">
+        <div class="row">
+            <ExamRequestDropInput class="input-column" label="Select Material" :options="materials" v-model="material"
+                placeholder="Selectează materia" />
+            <ExamRequestDropInput class="input-column" label="Select Professor" :options="professors"
+                v-model="professor" placeholder="Selectează profesorul" />
+            <ExamRequestDateInput class="input-column" label="Date" v-model="date" placeholder="Selectează data" />
+            <button class="add-exam-button" @click="addExam" :disabled="isFormInvalid">
+                Add Exam
+            </button>
         </div>
+        <p v-if="formStatus" class="form-status">{{ formStatus }}</p>
     </div>
 </template>
 
-<script setup>
-import Calendar from '@/components/Calendar.vue';
-import ExamsGrid from '@/components/ExamsGrid.vue';
-import StudentSidebar from '@/components/StudentSidebar.vue';
+<script>
+import ExamRequestDropInput from "./ExamRequestDropInput.vue";
+import ExamRequestDateInput from "./ExamRequestDateInput.vue";
+
+export default {
+    name: "ExamRequestsForm",
+    components: {
+        ExamRequestDropInput,
+        ExamRequestDateInput,
+    },
+    data() {
+        return {
+            material: "",
+            date: "",
+            professor: "",
+            materials: [
+                { text: "Materia 1", value: "materia1" },
+                { text: "Materia 2", value: "materia2" },
+                { text: "Materia 3", value: "materia3" },
+                { text: "Materia 4", value: "materia4" },
+            ],
+            professors: [
+                { text: "Profesor A", value: "profA" },
+                { text: "Profesor B", value: "profB" },
+            ],
+            formStatus: "",
+        };
+    },
+    computed: {
+        isFormInvalid() {
+            return !this.material || !this.professor || !this.date;
+        },
+    },
+    methods: {
+        addExam() {
+            if (this.isFormInvalid) {
+                this.formStatus = "Completeaza toate campurile.";
+                return;
+            }
+            console.log({
+                material: this.material,
+                date: this.date,
+                professor: this.professor,
+            });
+
+            this.material = "";
+            this.date = "";
+            this.professor = "";
+        },
+    },
+};
 </script>
 
 <style scoped>
-    #app {
-        height: 100vh;
-        width: 100%;
-    }
+.exam-request-form {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 100px;
+}
 
-    .layout {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #EAEAEA;
-    }
+.row {
+    display: flex;
+    gap: 20px;
+    align-items: end;
+    width: 100%;
+    justify-content: space-around;
+}
 
-    .student-view {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 10px 20px;
-        margin-left: 1rem;
-    }
+.input-column {
+    flex: 1;
+}
 
-        .student-view > * + * {
-            margin-top: 1.5rem;
-        }
+.add-exam-button {
+    width: 15%;
+    height: 80px;
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 
-    .sidebar {
-        width: 250px;
-        background-color: #fff;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
-    }
+.add-exam-button:hover {
+    background-color: #333;
+}
+
+.add-exam-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.form-status {
+    font-size: 1rem;
+    font-weight: bold;
+    color: green;
+    margin-top: 20px;
+}
 </style>
