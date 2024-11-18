@@ -1,9 +1,8 @@
 <script setup>
-import LoginView from './views/LoginView.vue'
 </script>
 
 <template>
-  <LoginView />
+  <router-view />
 </template>
 
 <style scoped>
@@ -14,5 +13,4 @@ html, body, #app {
   height: 100%;
   overflow: hidden;
 }
-
 </style>
