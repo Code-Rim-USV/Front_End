@@ -16,7 +16,7 @@
             </thead>
             <tbody>
               <tr v-for="(week, weekIndex) in firstMonthWeeks" :key="weekIndex">
-                <td v-for="day in week" :key="day" class="calendar-cell">
+                <td v-for="day in week" :key="day">
                   <div v-if="day" :class="['day', { highlighted: day.highlighted, gray: !day.current }]">
                     {{ day.date }}
                   </div>
@@ -47,7 +47,7 @@
             </thead>
             <tbody>
               <tr v-for="(week, weekIndex) in secondMonthWeeks" :key="weekIndex">
-                <td v-for="day in week" :key="day" class="calendar-cell">
+                <td v-for="day in week" :key="day">
                   <div v-if="day" :class="['day', { highlighted: day.highlighted, gray: !day.current }]">
                     {{ day.date }}
                   </div>
@@ -166,7 +166,7 @@
   <style scoped>
   .calendar-container {
     display: flex;
-    gap: 1em;
+    gap: 0.5em;
     justify-content: center;
     padding: 0.5em;
     background-color: #f4f4f4;
@@ -186,7 +186,7 @@
   }
   
   .calendar-title {
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
   
   .calendar-nav {
@@ -202,13 +202,14 @@
   }
   
   .calendar-grid {
-    padding: 1em;
+    padding: 0.5em;
   }
   
   .calendar-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 3px;
+    font-size: 0.9em;
   }
   
   .calendar-table th,
@@ -217,13 +218,8 @@
     text-align: center;
   }
   
-  .calendar-cell {
-    height: 30px;
-    width: 30px;
-  }
-  
   .day {
-    padding: 12px;
+    padding: 7px 0;
     border-radius: 14px;
   }
   

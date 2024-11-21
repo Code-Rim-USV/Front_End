@@ -55,7 +55,7 @@ export default {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    width: 500px;
+    width: 50%;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     color: black;
 }
@@ -70,7 +70,7 @@ h2 {
 
 textarea {
     width: 100%;
-    height: 150px;
+    height: 15vh;
     margin-top: 10px;
     padding: 8px;
     font-size: 1em;

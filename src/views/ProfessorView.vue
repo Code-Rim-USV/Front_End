@@ -73,11 +73,11 @@ function closeDialogs() {
         align-items: center;
         padding: 10px 20px;
         margin-left: 1rem;
-        row-gap: 10px;
+        row-gap: 5px;
     }
 
         .professor-view > * + * {
-            margin-top: 1.5rem;
+            margin-top: 0.5rem;
         }
 
     .dialogue-overlay {

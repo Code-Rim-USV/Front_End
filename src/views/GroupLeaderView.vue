@@ -52,10 +52,10 @@ function setActiveComponent(componentName) {
   align-items: center;
   padding: 10px 20px;
   margin-left: 1rem;
-  row-gap: 10px;
+  row-gap: 1px;
 }
 
 .student-view>*+* {
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
 }
 </style>

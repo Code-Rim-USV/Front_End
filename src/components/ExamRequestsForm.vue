@@ -7,7 +7,7 @@
                 v-model="professor" placeholder="Selectează profesorul" />
             <ExamRequestDateInput class="input-column" label="Date" v-model="date" placeholder="Selectează data" />
             <button class="add-exam-button" @click="addExam" :disabled="isFormInvalid">
-                Add Exam
+                Trimite Programare
             </button>
         </div>
         <p v-if="formStatus" class="form-status">{{ formStatus }}</p>
