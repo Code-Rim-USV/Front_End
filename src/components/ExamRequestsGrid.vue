@@ -50,7 +50,7 @@ export default {
 
 <style scoped>
 .exam-requests-grid {
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
   padding: 20px;
   background-color: #f9fafb;
@@ -66,7 +66,7 @@ h2 {
 }
 
 .table-container {
-  max-height: 300px;
+  max-height: 30vh;
   overflow-y: auto;
 }
 

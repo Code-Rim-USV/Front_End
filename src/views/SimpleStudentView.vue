@@ -40,7 +40,7 @@ import StudentSidebar from '@/components/StudentSidebar.vue';
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 10px 20px;
+        padding: 0;
         margin-left: 1rem;
     }
 
