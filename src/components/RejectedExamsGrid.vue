@@ -47,7 +47,7 @@ export default {
 
 <style scoped>
 .rejected-exams-grid {
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
   padding: 20px;
   background-color: #f9fafb;
@@ -63,7 +63,7 @@ h2 {
 }
 
 .table-container {
-  height: 600px;
+  height: 80vh;
   overflow-y: auto;
 }
 
