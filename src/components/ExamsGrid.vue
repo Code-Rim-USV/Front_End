@@ -14,14 +14,13 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Dynamically populated rows from the exams list -->
           <tr v-for="exam in exams" :key="exam.id">
-            <td>{{ exam.material }}</td>
-            <td>{{ exam.professor }}</td>
-            <td>{{ exam.assistant }}</td>
-            <td>{{ exam.room }}</td>
+            <td>{{ exam.subjectName }}</td>
+            <td>{{ exam.professorName }}</td>
+            <td>{{ exam.assistantName }}</td>
+            <td>{{ exam.location }}</td>
             <td>{{ exam.date }}</td>
-            <td>{{ exam.time }}</td>
+            <td>{{ exam.start_Time }}</td>
           </tr>
         </tbody>
       </table>
@@ -31,19 +30,9 @@
 
 <script>
 export default {
-  name: 'ExamsGridComponent',
-  data() {
-    return {
-      exams: [
-        { id: 1, material: 'Sisteme Inteligente', professor: 'Turcu Corneliu', assistant: 'Ovidiu Gherman', room: 'C202', date: '22.11.2024', time: '12:00' },
-        { id: 2, material: 'Baze de Date', professor: 'Ionescu Ana', assistant: 'Marin Bogdan', room: 'C203', date: '25.11.2024', time: '14:00' },
-        { id: 3, material: 'Algoritmi și Structuri de Date', professor: 'Popescu Mihai', assistant: 'Sima Elena', room: 'C204', date: '27.11.2024', time: '09:00' },
-        { id: 4, material: 'Tehnologii Web', professor: 'Stanescu Radu', assistant: 'Gheorghe Ion', room: 'C205', date: '29.11.2024', time: '10:00' },
-        { id: 5, material: 'Calculatoare Paralele', professor: 'Ilie Vasile', assistant: 'Petrache Clara', room: 'C206', date: '03.12.2024', time: '15:00' },
-        { id: 6, material: 'Rețele de Calculatoare', professor: 'Mihaila George', assistant: 'Munteanu Daniel', room: 'C207', date: '06.12.2024', time: '11:00' },
-        { id: 7, material: 'Sisteme de Operare', professor: 'Dima Alina', assistant: 'Lupu Florin', room: 'C208', date: '10.12.2024', time: '13:00' },
-      ],
-    };
+  name: 'ExamsGrid',
+  props: {
+    exams: Array, 
   },
 };
 </script>

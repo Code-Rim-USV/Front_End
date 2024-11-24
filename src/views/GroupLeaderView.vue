@@ -2,37 +2,77 @@
   <div class="layout">
     <GroupLeaderSidebar @changeComponent="setActiveComponent" />
     <div class="student-view">
-      <Calendar v-if="activeComponent === 'calendar'" />
-      <ExamsGrid v-if="activeComponent === 'calendar'" />
-      <ExamRequestsForm v-if="activeComponent === 'examScheduling'" />
+      <!-- Calendar component -->
+      <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
+      <ExamsGrid :exams="exams" v-if="activeComponent === 'calendar'" />
+
+      <!-- Exam Scheduling components -->
+      <ExamRequestsForm 
+        v-if="activeComponent === 'examScheduling'" 
+        :materials="materials" 
+      />
       <GroupLeaderExamRequestsGrid v-if="activeComponent === 'examScheduling'" />
+
+      <!-- Rejected Exam grid -->
       <RejectedExamsGrid v-if="activeComponent === 'rejectSchedules'" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Calendar from '@/components/Calendar.vue';
 import ExamsGrid from '@/components/ExamsGrid.vue';
 import GroupLeaderExamRequestsGrid from '@/components/GroupLeaderExamRequestsGrid.vue';
 import RejectedExamsGrid from '@/components/RejectedExamsGrid.vue';
 import GroupLeaderSidebar from '@/components/GroupLeaderSidebar.vue';
 import ExamRequestsForm from '@/components/ExamRequestsForm.vue';
+import api from '@/services/api';
 
 const activeComponent = ref('calendar');
+const exams = ref([]);
+const userId = ref(null);
+const materials = ref([]);
+
+onMounted(() => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user) {
+    userId.value = user.userId;
+    fetchExams();
+    fetchMaterials();  
+  } else {
+    router.push({ name: 'LoginView' });
+  }
+});
 
 function setActiveComponent(componentName) {
   activeComponent.value = componentName;
 }
+
+async function fetchExams() {
+  try {
+    const response = await api.get(`/exams/GetByUserID${userId.value}`);
+    exams.value = response.data;
+  } catch (error) {
+    console.error('Error fetching exams: ', error);
+  }
+}
+
+async function fetchMaterials() {
+  try {
+    const response = await api.get('/Subjects/Get');
+    materials.value = response.data.map(subject => ({
+      text: subject.subjectName, 
+      value: subject.subjectID,  
+    }));
+    console.log(materials.value);
+  } catch (error) {
+    console.error('Error fetching materials: ', error);
+  }
+}
 </script>
 
 <style scoped>
-#app {
-  height: 100vh;
-  width: 100%;
-}
-
 .layout {
   position: absolute;
   top: 0;
@@ -52,7 +92,6 @@ function setActiveComponent(componentName) {
   align-items: center;
   padding: 10px 20px;
   margin-left: 1rem;
-  row-gap: 10px;
 }
 
 .student-view>*+* {

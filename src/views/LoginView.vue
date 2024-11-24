@@ -6,8 +6,7 @@
           <h2>Welcome to FIESC ePanel</h2>
           <form @submit.prevent="handleLogin">
             <BaseInput label="Email" type="email" placeholder="prenume.nume@student.usv.ro" v-model="email" />
-            <BaseInput label="Password" type="password" placeholder="Enter your password" v-model="password"
-              :show-toggle="true" />
+            <BaseInput label="Password" type="password" placeholder="Enter your password" v-model="password" :show-toggle="true" />
             <button type="submit" class="login-button">Login in</button>
           </form>
         </div>
@@ -17,32 +16,43 @@
 </template>
 
 <script>
-import BaseInput from "@/components/BaseInput.vue";
+import BaseInput from '@/components/BaseInput.vue';
+import api from '@/services/api';
 
 export default {
-  name: "LoginView",
+  name: 'LoginView',
   components: {
     BaseInput,
   },
   data() {
     return {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     };
   },
   methods: {
-    handleLogin() {
-      console.log("Email:", this.email);
-      console.log("Password:", this.password);
+    async handleLogin() {
+      try {
+        const response = await api.put('/auth', {
+          email: this.email,
+          password: this.password,
+        });
 
-      if (this.email === "student@gmail.com" && this.password === "student") {
-        this.$router.push({ name: 'SimpleStudentView' });
-      } else if (this.email === "leader@gmail.com" && this.password === "leader") {
-        this.$router.push({ name: 'GroupLeaderView' });
-      } else if (this.email === "profesor@gmail.com" && this.password === "profesor") {
-        this.$router.push({ name: 'ProfessorView' });
-      } else {
-        alert("Invalid credentials. Please try again.");
+        const { userId, roles } = response.data;
+
+        localStorage.setItem('user', JSON.stringify({ userId, roles }));
+
+        if (roles.includes('Student')) {
+          this.$router.push({ name: 'SimpleStudentView' });
+        } else if (roles.includes('GroupLeader')) {
+          this.$router.push({ name: 'GroupLeaderView' });
+        } else if (roles.includes('Professor')) {
+          this.$router.push({ name: 'ProfessorView' });
+        } else {
+          alert('Role not recognized.');
+        }
+      } catch (error) {
+        alert(error.response?.data?.message || 'Login failed. Please try again.');
       }
     },
   },

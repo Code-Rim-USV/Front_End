@@ -13,14 +13,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="exam in exams" :key="exam.id">
-            <td>{{ exam.material }}</td>
-            <td>{{ exam.group }}</td>
-            <td>{{ exam.date }}</td>
-            <td>{{ exam.status }}</td>
+          <tr v-for="request in requests" :key="request.requestID">
+            <td>{{ request.subjectName }}</td>
+            <td>{{ request.group }}</td>
+            <td>{{ request.date }}</td>
+            <td >{{ request.status }}</td>
             <td>
-              <button @click="$emit('accept', exam.id)" class="accept-btn">Accept</button>
-              <button @click="$emit('reject', exam.id)" class="reject-btn">Respingere</button>
+              <button @click="$emit('accept', request.requestID)" class="accept-btn">Accept</button>
+              <button @click="$emit('reject', request.requestID)" class="reject-btn">Respingere</button>
             </td>
           </tr>
         </tbody>
@@ -31,19 +31,12 @@
 
 <script>
 export default {
-  name: 'ExamRequestsGridComponent',
-  data() {
-    return {
-      exams: [
-        { id: 1, material: 'Sisteme Inteligente', group: '3141', date: '22.11.2024', status: 'În progres' },
-        { id: 2, material: 'Baze de Date', group: '3142', date: '25.11.2024', status: 'În progres' },
-        { id: 3, material: 'Algoritmi și Structuri de Date', group: '3143', date: '27.11.2024', status: 'În progres' },
-        { id: 4, material: 'Tehnologii Web', group: '3144', date: '29.11.2024', status: 'În progres' },
-        { id: 5, material: 'Calculatoare Paralele', group: '3121', date: '03.12.2024', status: 'În progres' },
-        { id: 6, material: 'Rețele de Calculatoare', group: '3131', date: '06.12.2024', status: 'În progres' },
-        { id: 7, material: 'Sisteme de Operare', group: '3114', date: '10.12.2024', status: 'În progres' },
-      ],
-    };
+  name: 'ExamRequestsGrid',
+  props: {
+    requests: {
+      type: Array,
+      required: true,
+    },
   },
 };
 </script>

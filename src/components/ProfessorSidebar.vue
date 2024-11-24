@@ -39,7 +39,9 @@
         this.$emit('changeComponent', tab);
       },
       logout() {
-        this.$router.push('/');
+        localStorage.removeItem('user');  
+  
+        this.$router.push({ name: 'LoginView' });  
       },
     },
   };
