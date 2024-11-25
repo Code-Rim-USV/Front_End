@@ -89,7 +89,7 @@ async function fetchAssistants() {
     const response = await api.get('/Users/GetByRole/Assistant');
     assistants.value = response.data.map(assistant => ({
       value: assistant.userID,
-      text: `${assistant.firstName} ${assistant.lastName}`, 
+      text: `${assistant.userName}`, 
     }));
   } catch (error) {
     console.error('Error fetching assistants: ', error);
