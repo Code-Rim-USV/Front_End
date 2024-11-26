@@ -11,10 +11,10 @@
         v-if="activeComponent === 'examScheduling'" 
         :materials="materials" 
       />
-      <GroupLeaderExamRequestsGrid v-if="activeComponent === 'examScheduling'" />
+      <GroupLeaderExamRequestsGrid :exams="examRequestsPending"  v-if="activeComponent === 'examScheduling'" />
 
       <!-- Rejected Exam grid -->
-      <RejectedExamsGrid v-if="activeComponent === 'rejectSchedules'" />
+      <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
     </div>
   </div>
 </template>
@@ -31,6 +31,8 @@ import api from '@/services/api';
 
 const activeComponent = ref('calendar');
 const exams = ref([]);
+const examRequestsPending = ref([]);
+const examRequestsRejected = ref([]);
 const userId = ref(null);
 const materials = ref([]);
 
@@ -39,7 +41,9 @@ onMounted(() => {
   if (user) {
     userId.value = user.userId;
     fetchExams();
-    fetchMaterials();  
+    fetchMaterials();
+    fetchExamRequests();
+    fetchExamRequestsRejected();  
   } else {
     router.push({ name: 'LoginView' });
   }
@@ -53,6 +57,24 @@ async function fetchExams() {
   try {
     const response = await api.get(`/exams/GetByUserID${userId.value}`);
     exams.value = response.data;
+  } catch (error) {
+    console.error('Error fetching exams: ', error);
+  }
+}
+
+async function fetchExamRequests() {
+  try {
+    const response = await api.get(`/Requests/GetByUserID/${userId.value}/Pending`);
+    examRequestsPending.value = response.data;
+  } catch (error) {
+    console.error('Error fetching exams: ', error);
+  }
+}
+
+async function fetchExamRequestsRejected() {
+  try {
+    const response = await api.get(`/Requests/GetByUserID/${userId.value}/Rejected`);
+    examRequestsRejected.value = response.data;
   } catch (error) {
     console.error('Error fetching exams: ', error);
   }

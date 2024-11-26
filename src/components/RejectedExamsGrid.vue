@@ -14,8 +14,8 @@
         </thead>
         <tbody>
           <tr v-for="exam in rejectedExams" :key="exam.id">
-            <td>{{ exam.material }}</td>
-            <td>{{ exam.professor }}</td>
+            <td>{{ exam.subjectName }}</td>
+            <td>{{ exam.professorName }}</td>
             <td>{{ exam.date }}</td>
             <td>
               <div class="rejected-status">Respins</div>
@@ -30,20 +30,12 @@
 
 <script>
 export default {
-  name: 'RejectedExamsGridComponent',
-  data() {
-    return {
-      rejectedExams: [
-        { id: 1, material: 'Matematică Discretă', professor: 'Popescu Adrian', date: '01.12.2024', rejectionReason: 'Programare suprapusă' },
-        { id: 2, material: 'Programare Orientată pe Obiecte', professor: 'Mihailescu Andreea', date: '03.12.2024', rejectionReason: 'Motiv administrativ' },
-        { id: 3, material: 'Sisteme de Operare', professor: 'Dima Alexandru', date: '05.12.2024', rejectionReason: 'Neconformitate program' },
-        { id: 4, material: 'Analiză Numerică', professor: 'Ionescu Daniela', date: '08.12.2024', rejectionReason: 'Conflicte de resurse' },
-        { id: 5, material: 'Teoria Grafurilor', professor: 'Georgescu Valentin', date: '10.12.2024', rejectionReason: 'Număr insuficient de săli' },
-      ],
-    };
+  name: 'ExamsGrid',
+  props: {
+    rejectedExams: Array, 
   },
 };
-</script>
+</script>s
 
 <style scoped>
 .rejected-exams-grid {
