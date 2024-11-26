@@ -5,8 +5,8 @@
       <input
         :type="inputType"
         :placeholder="placeholder"
-        v-model="inputValue"
-        @input="$emit('update:modelValue', inputValue)"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
       />
       <button
         v-if="showToggle"
