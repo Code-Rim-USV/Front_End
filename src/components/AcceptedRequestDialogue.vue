@@ -42,54 +42,10 @@ export default {
       type: Array,
       required: true,
     },
-  },
-  data() {
-    return {
-      selectedAssistant: '',
-      selectedRoom: '',
-      selectedTime: {
-        hours: 1,
-        minutes: 0,
-        isAM: true,
-      },
-      roomOptions: [
-        { value: 'C001', text: 'C001' },
-        { value: 'C002', text: 'C002' },
-        { value: 'C003', text: 'C003' },
-        { value: 'C004', text: 'C004' },
-        { value: 'C005', text: 'C005' },
-        { value: 'C006', text: 'C006' },
-        { value: 'C007', text: 'C007' },
-        { value: 'C009', text: 'C009' },
-
-        { value: 'C101', text: 'C101' },
-        { value: 'C102', text: 'C102' },
-        { value: 'C103', text: 'C103' },
-        { value: 'C104', text: 'C104' },
-        { value: 'C105', text: 'C105' },
-        { value: 'C106', text: 'C106' },
-        { value: 'C107', text: 'C107' },
-        { value: 'C109', text: 'C109' },
-
-        { value: 'C201', text: 'C201' },
-        { value: 'C202', text: 'C202' },
-        { value: 'C203', text: 'C203' },
-        { value: 'C204', text: 'C204' },
-        { value: 'C205', text: 'C205' },
-        { value: 'C206', text: 'C206' },
-        { value: 'C207', text: 'C207' },
-        { value: 'C209', text: 'C209' },
-
-        { value: 'C301', text: 'C301' },
-        { value: 'C302', text: 'C302' },
-        { value: 'C303', text: 'C303' },
-        { value: 'C304', text: 'C304' },
-        { value: 'C305', text: 'C305' },
-        { value: 'C306', text: 'C306' },
-        { value: 'C307', text: 'C307' },
-        { value: 'C309', text: 'C309' }
-      ],
-    };
+    roomOptions: {
+      type: Array,
+      required: true,
+    },
   },
   methods: {
     async acceptExam() {
