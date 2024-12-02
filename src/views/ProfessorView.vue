@@ -9,7 +9,7 @@
         @reject="openRejectDialog" />
 
       <AcceptedRequestDialogue v-if="showAcceptDialog" :requestID="selectedRequestID" @close="closeDialogs"
-        :assistant-options="assistants" />
+        :assistant-options="assistants" :room-options="rooms" />
       <RejectedRequestDialogue v-if="showRejectDialog" :requestID="selectedRequestID" @close="closeDialogs" />
     </div>
   </div>
@@ -29,6 +29,7 @@ const activeComponent = ref('calendar');
 const exams = ref([]);
 const requests = ref([]);
 const assistants = ref([]); 
+const rooms = ref([]); 
 const userId = ref(null);
 const showAcceptDialog = ref(false);
 const showRejectDialog = ref(false);
@@ -41,6 +42,7 @@ onMounted(() => {
     fetchExams();
     fetchRequests();
     fetchAssistants(); 
+    fetchRooms();
   } else {
     router.push({ name: 'LoginView' });
   }
@@ -93,6 +95,18 @@ async function fetchAssistants() {
     }));
   } catch (error) {
     console.error('Error fetching assistants: ', error);
+  }
+}
+
+async function fetchRooms() {
+  try {
+    const response = await api.get('/Locations/Get');
+    rooms.value = response.data.map(room => ({
+      value: room.locationID,
+      text: room.locationName, 
+    }));
+  } catch (error) {
+    console.error('Error fetching rooms: ', error);
   }
 }
 </script>
