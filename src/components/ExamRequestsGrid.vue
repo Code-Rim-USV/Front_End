@@ -12,18 +12,19 @@
             <th>Acțiune</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="requests.length > 0">
           <tr v-for="request in requests" :key="request.requestID">
             <td>{{ request.subjectName }}</td>
             <td>{{ request.group }}</td>
             <td>{{ request.date }}</td>
-            <td >{{ request.status }}</td>
+            <td>{{ request.status }}</td>
             <td>
               <button @click="$emit('accept', request.requestID)" class="accept-btn">Accept</button>
               <button @click="$emit('reject', request.requestID)" class="reject-btn">Respingere</button>
             </td>
           </tr>
         </tbody>
+        <p v-else>Nu sunt informații</p>
       </table>
     </div>
   </div>
@@ -50,6 +51,7 @@ export default {
   border-radius: 10px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   position: relative;
+  height: 40%;
 }
 
 h2 {
@@ -58,9 +60,17 @@ h2 {
   color: black;
 }
 
+p {
+  font-size: 1.5em;
+  margin-top: 20px;
+  margin-left: 20px;
+  color: rgb(46, 45, 45);
+  font-family: 'Courier New', Courier, monospace;
+}
+
 .table-container {
-  max-height: 30vh;
   overflow-y: auto;
+  height: 80%;
 }
 
 table {

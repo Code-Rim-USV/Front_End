@@ -4,6 +4,7 @@
     <div class="professor-view">
       <!-- Calendar component -->
       <Calendar :exam-dates="exams" />
+      .grids
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" />
       <ExamRequestsGrid :requests="requests" v-if="activeComponent === 'applications'" @accept="openAcceptDialog"
         @reject="openRejectDialog" />
@@ -122,6 +123,7 @@ async function fetchRooms() {
   align-items: center;
   justify-content: center;
   background-color: #EAEAEA;
+  overflow: hidden;
 }
 
 .professor-view {
@@ -131,9 +133,18 @@ async function fetchRooms() {
   align-items: center;
   padding: 10px 20px;
   margin-left: 1rem;
+  overflow-y: auto; 
+  height: 100%; 
 }
 
-.professor-view>*+* {
+.professor-view  {
   margin-top: 1.5rem;
+}
+
+.professor-view > * {
+  flex: 1 1 auto; 
+  width: 100%;
+  max-height: 100vh; 
+  min-height: 150px;  
 }
 </style>
