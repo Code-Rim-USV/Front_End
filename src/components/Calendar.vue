@@ -16,8 +16,11 @@
           </thead>
           <tbody>
             <tr v-for="(week, weekIndex) in firstMonthWeeks" :key="weekIndex">
-              <td v-for="day in week" :key="day" class="calendar-cell">
-                <div v-if="day" :class="['day', { highlighted: day.highlighted, gray: !day.current }]">
+              <td v-for="day in week" :key="day.date" class="calendar-cell">
+                <div
+                  v-if="day"
+                  :class="['day', { highlighted: day.highlighted, gray: !day.current }]"
+                >
                   {{ day.date }}
                 </div>
               </td>
@@ -34,8 +37,20 @@
           <h2>{{ nextMonthTitle }}</h2>
         </span>
         <div class="calendar-nav">
-          <button @click="changeMonth(-1)" class="calendar-btn" aria-label="calendar backward">‹</button>
-          <button @click="changeMonth(1)" class="calendar-btn" aria-label="calendar forward">›</button>
+          <button
+            @click="changeMonth(-1)"
+            class="calendar-btn"
+            aria-label="calendar backward"
+          >
+            ‹
+          </button>
+          <button
+            @click="changeMonth(1)"
+            class="calendar-btn"
+            aria-label="calendar forward"
+          >
+            ›
+          </button>
         </div>
       </div>
       <div class="calendar-grid">
@@ -47,8 +62,11 @@
           </thead>
           <tbody>
             <tr v-for="(week, weekIndex) in secondMonthWeeks" :key="weekIndex">
-              <td v-for="day in week" :key="day" class="calendar-cell">
-                <div v-if="day" :class="['day', { highlighted: day.highlighted, gray: !day.current }]">
+              <td v-for="day in week" :key="day.date" class="calendar-cell">
+                <div
+                  v-if="day"
+                  :class="['day', { highlighted: day.highlighted, gray: !day.current }]"
+                >
                   {{ day.date }}
                 </div>
               </td>
@@ -62,30 +80,36 @@
 
 <script>
 export default {
-  name: 'Calendar',
+  name: "Calendar",
   props: {
     examDates: {
       type: Array,
       required: false,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   data() {
     const now = new Date();
     return {
-      days: ['LUN', 'MAR', 'MIE', 'JOI', 'VIN', 'SAM', 'DUM'],
+      days: ["LUN", "MAR", "MIE", "JOI", "VIN", "SAM", "DUM"],
       currentMonth: now.getMonth(),
       currentYear: now.getFullYear(),
     };
   },
   computed: {
     calendarTitle() {
-      return `${new Date(this.currentYear, this.currentMonth).toLocaleString('default', { month: 'long' })} ${this.currentYear}`;
+      return new Date(this.currentYear, this.currentMonth).toLocaleString(
+        "default",
+        { month: "long", year: "numeric" }
+      );
     },
     nextMonthTitle() {
       const nextMonth = this.currentMonth + 1;
       const nextYear = nextMonth > 11 ? this.currentYear + 1 : this.currentYear;
-      return `${new Date(nextYear, nextMonth % 12).toLocaleString('default', { month: 'long' })} ${nextYear}`;
+      return new Date(nextYear, nextMonth % 12).toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+      });
     },
     firstMonthWeeks() {
       return this.generateCalendarWeeks(this.currentYear, this.currentMonth);
@@ -94,7 +118,7 @@ export default {
       const nextMonth = this.currentMonth + 1;
       const nextYear = nextMonth > 11 ? this.currentYear + 1 : this.currentYear;
       return this.generateCalendarWeeks(nextYear, nextMonth % 12);
-    }
+    },
   },
   methods: {
     generateCalendarWeeks(year, month) {
@@ -104,13 +128,13 @@ export default {
       let week = [];
       let day = 1;
 
-      // Adaugă zilele din luna precedentă
-      const daysFromPrevMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+      // Fill previous month's days
+      const daysFromPrevMonth = (firstDayOfMonth || 7) - 1;
       for (let i = daysFromPrevMonth; i > 0; i--) {
         week.push({ date: new Date(year, month, -i + 1).getDate(), current: false });
       }
 
-      // Adaugă zilele din luna curentă
+      // Fill current month's days
       while (day <= daysInMonth) {
         week.push({ date: day++, current: true });
         if (week.length === 7) {
@@ -119,24 +143,24 @@ export default {
         }
       }
 
-      // Adaugă zilele din luna următoare
+      // Fill next month's days
       let nextMonthDay = 1;
       while (week.length < 7) {
         week.push({ date: nextMonthDay++, current: false });
       }
       weeks.push(week);
 
-      // Marchează zilele cu examene
+      // Highlight exam days
       this.markExamDays(weeks, year, month);
 
       return weeks;
     },
     markExamDays(weeks, year, month) {
-      this.examDates.forEach(exam => {
-        const [day, monthExam, yearExam] = exam.date.split('.').map(Number); // Ajustează formatul dacă e diferit
+      this.examDates.forEach((exam) => {
+        const [day, monthExam, yearExam] = exam.date.split(".").map(Number);
         if (year === yearExam && month === monthExam - 1) {
-          weeks.forEach(week => {
-            week.forEach(dayItem => {
+          weeks.forEach((week) => {
+            week.forEach((dayItem) => {
               if (dayItem.current && dayItem.date === day) {
                 dayItem.highlighted = true;
               }
@@ -154,20 +178,18 @@ export default {
         this.currentMonth = 11;
         this.currentYear--;
       }
-    }
-  }
+    },
+  },
 };
 </script>
-
 
 <style scoped>
 .calendar-container {
   display: flex;
-  gap: 1em;
   justify-content: center;
-  padding: 0.5em;
   background-color: #f4f4f4;
   width: 80%;
+  overflow-y: auto; 
 }
 
 .calendar {
@@ -179,6 +201,7 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 1em;
+  margin-left: 5%;
   font-weight: bold;
 }
 
@@ -215,8 +238,8 @@ export default {
 }
 
 .calendar-cell {
-  height: 30px;
-  width: 30px;
+  height: 1em;
+  width: 1em;
 }
 
 .day {

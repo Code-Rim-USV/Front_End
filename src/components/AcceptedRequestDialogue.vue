@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import api from '@/services/api';
 import ExamRequestDropInput from './ExamRequestDropInput.vue';
 import ScheduleExamHourInput from './ScheduleExamHourInput.vue';
@@ -47,6 +46,17 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      selectedAssistant: '',
+      selectedRoom: '',
+      selectedTime: {
+        hours: 1,
+        minutes: "00",
+        isAM: true,
+      },
+    }
+  },
   methods: {
     async acceptExam() {
       try {
@@ -54,9 +64,9 @@ export default {
           requestID: this.requestID,
           assistantID: this.selectedAssistant,
           start_Time: `${this.selectedTime.hours}:${this.selectedTime.minutes}${this.selectedTime.isAM ? 'AM' : 'PM'}`,
-          location: this.selectedRoom, 
+          locationID: this.selectedRoom,
         };
-        console.log(payload); 
+        console.log(payload);
         const response = await api.post('/Exams/PostWithRequestID', payload);
 
         if (response.status === 200) {
@@ -90,7 +100,8 @@ export default {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: 500px;
+  width: 50%;
+  max-width: 500px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   color: black;
 }

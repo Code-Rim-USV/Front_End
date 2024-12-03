@@ -12,7 +12,7 @@
             <th>Motivul Respingerii</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="rejectedExams.length > 0">
           <tr v-for="exam in rejectedExams" :key="exam.id">
             <td>{{ exam.subjectName }}</td>
             <td>{{ exam.professorName }}</td>
@@ -23,6 +23,7 @@
             <td>{{ exam.rejectionReason }}</td>
           </tr>
         </tbody>
+        <p v-else>Nu sunt informații</p>
       </table>
     </div>
   </div>
@@ -32,10 +33,10 @@
 export default {
   name: 'ExamsGrid',
   props: {
-    rejectedExams: Array, 
+    rejectedExams: Array,
   },
 };
-</script>s
+</script>
 
 <style scoped>
 .rejected-exams-grid {
@@ -46,6 +47,7 @@ export default {
   border-radius: 10px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   position: relative;
+  height: 40%;
 }
 
 h2 {
@@ -54,9 +56,17 @@ h2 {
   color: black;
 }
 
+p {
+  font-size: 1.5em;
+  margin-top: 20px;
+  margin-left: 20px;
+  color: rgb(46, 45, 45);
+  font-family: 'Courier New', Courier, monospace;
+}
+
 .table-container {
-  height: 80vh;
   overflow-y: auto;
+  height: 80%;
 }
 
 table {

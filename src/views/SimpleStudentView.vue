@@ -42,7 +42,6 @@
     }
   }
   </script>
-  
   <style scoped>
   .layout {
     position: absolute;
@@ -51,9 +50,9 @@
     right: 0;
     bottom: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
     background-color: #EAEAEA;
+    overflow: hidden;
   }
   
   .student-view {
@@ -63,20 +62,20 @@
     align-items: center;
     padding: 10px 20px;
     margin-left: 1rem;
+    overflow-y: auto; 
+    height: 100%; 
   }
   
   .student-view > * + * {
     margin-top: 1.5rem;
   }
   
-  .sidebar {
-    width: 250px;
-    background-color: #fff;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+  .student-view > * {
+    flex: 1 1 auto; 
+    width: 100%;
+    max-height: calc(100vh - 100px); 
+    min-height: 150px;  
   }
+  
   </style>
   

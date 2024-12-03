@@ -102,9 +102,9 @@ async function fetchMaterials() {
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: row;
   background-color: #EAEAEA;
+  overflow: hidden;
 }
 
 .student-view {
@@ -114,9 +114,18 @@ async function fetchMaterials() {
   align-items: center;
   padding: 10px 20px;
   margin-left: 1rem;
+  overflow-y: auto;
+  height: 100%;
 }
 
-.student-view>*+* {
+.student-view > * + * {
   margin-top: 1.5rem;
+}
+
+.student-view > * {
+  flex: 1 1 auto;
+  width: 100%;
+  max-height: 100vh;
+  min-height: 150px;
 }
 </style>
