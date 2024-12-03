@@ -4,7 +4,6 @@
     <div class="professor-view">
       <!-- Calendar component -->
       <Calendar :exam-dates="exams" />
-      .grids
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" />
       <ExamRequestsGrid :requests="requests" v-if="activeComponent === 'applications'" @accept="openAcceptDialog"
         @reject="openRejectDialog" />
