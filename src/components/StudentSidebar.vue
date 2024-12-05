@@ -16,7 +16,7 @@
       </nav>
       <div class="logout" @click="logout">
         <span class="material-icons">logout</span>
-        <span>Logout</span>
+        <span>Deconectare</span>
       </div>
     </div>
   </template>

@@ -13,7 +13,7 @@
         type="button"
         @click="togglePasswordVisibility"
         class="toggle-button"
-        aria-label="Toggle password visibility"
+        aria-label="Vezi parola"
       >
         <span v-if="isPasswordVisible">👁️</span>
         <span v-else>👁️‍🗨️</span>

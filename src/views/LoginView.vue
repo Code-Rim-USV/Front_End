@@ -3,11 +3,11 @@
     <div class="background">
       <div class="background-overlay">
         <div class="login-card">
-          <h2>Welcome to FIESC ePanel</h2>
+          <h2>Bun venit la FIESC ePanel</h2>
           <form @submit.prevent="handleLogin">
             <BaseInput label="Email" type="email" placeholder="prenume.nume@student.usv.ro" v-model="email" />
-            <BaseInput label="Password" type="password" placeholder="Enter your password" v-model="password" :show-toggle="true" />
-            <button type="submit" class="login-button">Login in</button>
+            <BaseInput label="Parola" type="password" placeholder="Enter your password" v-model="password" :show-toggle="true" />
+            <button type="submit" class="login-button">Autentificare</button>
           </form>
         </div>
       </div>
@@ -49,10 +49,10 @@ export default {
         } else if (roles.includes('Professor')) {
           this.$router.push({ name: 'ProfessorView' });
         } else {
-          alert('Role not recognized.');
+          alert('Rolul nu a fost identificat.');
         }
       } catch (error) {
-        alert(error.response?.data?.message || 'Login failed. Please try again.');
+        alert(error.response?.data?.message || 'Autentificarea a eșuat. Vă rugam să încercați din nou.');
       }
     },
   },

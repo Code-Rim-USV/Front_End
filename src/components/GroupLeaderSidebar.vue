@@ -18,13 +18,13 @@
           </li>
           <li :class="{ active: activeItem === 'rejectSchedules' }" @click="setActive('rejectSchedules')">
             <span class="material-icons">cancel</span>
-            <span>Programari Respinse</span>
+            <span>Programări Respinse</span>
           </li>
         </ul>
       </nav>
       <div class="logout" @click="logout">
         <span class="material-icons">logout</span>
-        <span>Logout</span>
+        <span>Deconectare</span>
       </div>
     </div>
   </template>

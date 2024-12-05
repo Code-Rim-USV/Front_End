@@ -99,14 +99,14 @@ export default {
   computed: {
     calendarTitle() {
       return new Date(this.currentYear, this.currentMonth).toLocaleString(
-        "default",
+        "RO",
         { month: "long", year: "numeric" }
       );
     },
     nextMonthTitle() {
       const nextMonth = this.currentMonth + 1;
       const nextYear = nextMonth > 11 ? this.currentYear + 1 : this.currentYear;
-      return new Date(nextYear, nextMonth % 12).toLocaleString("default", {
+      return new Date(nextYear, nextMonth % 12).toLocaleString("RO", {
         month: "long",
         year: "numeric",
       });

@@ -18,7 +18,7 @@
             <td>{{ exam.professorName }}</td>
             <td>{{ exam.date }}</td>
             <td>
-              <div class="process">In proces</div>
+              <div class="process">În proces</div>
             </td>
           </tr>
         </tbody>

@@ -14,8 +14,8 @@
         <ScheduleExamHourInput v-model="selectedTime" />
       </div>
       <div class="dialogue-buttons">
-        <button class="confirm-btn" @click="acceptExam">Accept</button>
-        <button class="cancel-btn" @click="$emit('close')">Cancel</button>
+        <button class="confirm-btn" @click="acceptExam">Acceptă</button>
+        <button class="cancel-btn" @click="$emit('close')">Anulează</button>
       </div>
     </div>
   </div>
