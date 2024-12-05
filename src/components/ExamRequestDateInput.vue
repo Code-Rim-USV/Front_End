@@ -25,7 +25,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: "Select a date",
+      default: "Selectează o dată",
     },
   },
   computed: {

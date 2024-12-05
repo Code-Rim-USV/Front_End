@@ -73,7 +73,7 @@ async function fetchExams() {
     const response = await api.get(`/exams/GetByUserID${userId.value}`);
     exams.value = response.data;
   } catch (error) {
-    console.error('Error fetching exams: ', error);
+    console.error('Eroare la preluarea examenelor: ', error);
   }
 }
 
@@ -82,7 +82,7 @@ async function fetchRequests() {
     const response = await api.get(`/Requests/GetByUserID/${userId.value}/Pending`);
     requests.value = response.data;
   } catch (error) {
-    console.error('Error fetching requests: ', error);
+    console.error('Eroare la preluarea cererilor: ', error);
   }
 }
 
@@ -94,7 +94,7 @@ async function fetchAssistants() {
       text: `${assistant.userName}`, 
     }));
   } catch (error) {
-    console.error('Error fetching assistants: ', error);
+    console.error('Eroare la preluarea asistenților: ', error);
   }
 }
 
@@ -106,7 +106,7 @@ async function fetchRooms() {
       text: room.locationName, 
     }));
   } catch (error) {
-    console.error('Error fetching rooms: ', error);
+    console.error('Eroare la preluarea sălilor: ', error);
   }
 }
 </script>

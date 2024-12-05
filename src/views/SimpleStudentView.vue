@@ -38,7 +38,7 @@
       const response = await api.get(`/exams/GetByUserID${userId.value}`);
       exams.value = response.data; 
     } catch (error) {
-      console.error('Error fetching exams: ', error);
+      console.error('Eroare la preluarea examenelor: ', error);
     }
   }
   </script>

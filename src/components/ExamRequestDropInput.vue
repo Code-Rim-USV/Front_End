@@ -31,7 +31,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: "Selecteaza o optiune",
+      default: "Selectează o opțiune",
     },
   },
   computed: {

@@ -16,7 +16,7 @@
           placeholder="Selectează data" 
         />
         <button class="add-exam-button" @click="addExam" :disabled="isFormInvalid">
-          Add Exam
+          Adaugă un examen
         </button>
       </div>
       <p v-if="formStatus" class="form-status">{{ formStatus }}</p>
@@ -60,7 +60,7 @@
   
         const userID = JSON.parse(localStorage.getItem('user'))?.userId;
         if (!userID) {
-          this.formStatus = "User not found.";
+          this.formStatus = "Utilizatorul nu a fost găsit.";
           return;
         }
   
@@ -76,7 +76,7 @@
           const response = await api.post('/Requests/Post', requestData);
           window.location.reload();
         } catch (error) {
-          console.error('Error adding exam request: ', error);
+          console.error('Eroare la adăugarea examenului: ', error);
         }
   
         // Reset form

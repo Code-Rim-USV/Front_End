@@ -58,7 +58,7 @@ async function fetchExams() {
     const response = await api.get(`/exams/GetByUserID${userId.value}`);
     exams.value = response.data;
   } catch (error) {
-    console.error('Error fetching exams: ', error);
+    console.error('Eroare la preluarea examenelor: ', error);
   }
 }
 
@@ -67,7 +67,7 @@ async function fetchExamRequests() {
     const response = await api.get(`/Requests/GetByUserID/${userId.value}/Pending`);
     examRequestsPending.value = response.data;
   } catch (error) {
-    console.error('Error fetching exams: ', error);
+    console.error('Eroare la preluarea examenelor: ', error);
   }
 }
 
@@ -76,7 +76,7 @@ async function fetchExamRequestsRejected() {
     const response = await api.get(`/Requests/GetByUserID/${userId.value}/Rejected`);
     examRequestsRejected.value = response.data;
   } catch (error) {
-    console.error('Error fetching exams: ', error);
+    console.error('Eroare la preluarea examenelor: ', error);
   }
 }
 
@@ -89,7 +89,7 @@ async function fetchMaterials() {
     }));
     console.log(materials.value);
   } catch (error) {
-    console.error('Error fetching materials: ', error);
+    console.error('Eroare la preluarea materiilor: ', error);
   }
 }
 </script>
