@@ -11,17 +11,22 @@
             <th>Sala</th>
             <th>Data</th>
             <th>Ora</th>
+            <th>Editare</th>
           </tr>
         </thead>
         <tbody v-if="exams.length > 0">
-          <!-- Dynamically populated rows from the exams list -->
-          <tr v-for="exam in exams" :key="exam.id">
+          <tr v-for="exam in exams" :key="exam.examID">
             <td>{{ exam.subjectName }}</td>
             <td>{{ exam.group }}</td>
-            <td>{{ exam.professorName }}</td>
+            <td>{{ exam.assistantName }}</td>
             <td>{{ exam.location }}</td>
             <td>{{ exam.date }}</td>
             <td>{{ exam.start_Time }}</td>
+            <td>
+              <button @click="$emit('edit', exam)" class="edit-btn">
+                <span class="material-icons">edit</span>
+              </button>
+            </td>
           </tr>
         </tbody>
         <p v-else>Nu sunt informații</p>
@@ -32,12 +37,14 @@
 
 <script>
 export default {
-  name: 'ExamsGrid',
+  name: 'ProfessorExamsGrid',
   props: {
     exams: Array,
   },
+  emits: ['edit'],  
 };
 </script>
+
 
 <style scoped>
 .professor-exams-grid {
@@ -49,7 +56,6 @@ export default {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   position: relative;
   height: 40%;
-
 }
 
 h2 {
@@ -85,8 +91,9 @@ thead th {
 }
 
 tbody td {
-  padding: 10px 20px;
+  padding: 10px 10px;
   color: #333;
+  width: 15%;
 }
 
 tbody tr {
@@ -97,12 +104,20 @@ tbody tr:last-child {
   border-bottom: none;
 }
 
-.grid-line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 2px;
-  background-color: #b0b0b0;
+.edit-btn {
+  background-color: orange;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-btn svg {
+  margin-right: 5px;
+}
+
+.edit-btn:hover {
+  background-color: darkorange;
 }
 </style>

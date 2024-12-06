@@ -4,9 +4,15 @@
     <div class="professor-view">
       <!-- Calendar component -->
       <Calendar :exam-dates="exams" />
-      <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" />
+      <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
       <ExamRequestsGrid :requests="requests" v-if="activeComponent === 'applications'" @accept="openAcceptDialog"
         @reject="openRejectDialog" />
+      <ExamEditDialog  v-if="showEditDialog"
+        :examID="selectedExam.examID"
+        :examData="selectedExam"
+        :assistant-options="assistants"
+        :room-options="rooms"
+        @close="closeDialogs" />
 
       <AcceptedRequestDialogue v-if="showAcceptDialog" :requestID="selectedRequestID" @close="closeDialogs"
         :assistant-options="assistants" :room-options="rooms" />
@@ -21,6 +27,7 @@ import Calendar from '@/components/Calendar.vue';
 import ProfessorExamGrid from '@/components/ProfessorExamsGrid.vue';
 import ProfessorSidebar from '@/components/ProfessorSidebar.vue';
 import ExamRequestsGrid from '@/components/ExamRequestsGrid.vue';
+import ExamEditDialog from '@/components/ExamEditDialog.vue';
 import AcceptedRequestDialogue from '@/components/AcceptedRequestDialogue.vue';
 import RejectedRequestDialogue from '@/components/RejectedRequestDialogue.vue';
 import api from '@/services/api';
@@ -34,6 +41,9 @@ const userId = ref(null);
 const showAcceptDialog = ref(false);
 const showRejectDialog = ref(false);
 const selectedRequestID = ref(null);
+const selectedExam = ref({});
+const showEditDialog = ref(false);
+
 
 let pollingInterval = null;
 
@@ -61,7 +71,7 @@ function setActiveComponent(componentName) {
 }
 
 function startPolling() {
-  stopPolling(); 
+  stopPolling();
   pollingInterval = setInterval(() => {
     if (activeComponent.value === 'calendar') {
       fetchExams();
@@ -69,7 +79,7 @@ function startPolling() {
       fetchRequests();
       fetchExams();
     }
-  }, 500); 
+  }, 500);
 }
 
 function stopPolling() {
@@ -80,8 +90,13 @@ function stopPolling() {
 }
 
 watch(activeComponent, () => {
-  startPolling(); 
+  startPolling();
 });
+
+function openEditDialog(exam) {
+  selectedExam.value = exam;  
+  showEditDialog.value = true;  
+}
 
 function openAcceptDialog(requestID) {
   selectedRequestID.value = requestID;
@@ -96,8 +111,10 @@ function openRejectDialog(requestID) {
 function closeDialogs() {
   showAcceptDialog.value = false;
   showRejectDialog.value = false;
+  showEditDialog.value = false;
   selectedRequestID.value = null;
 }
+
 
 async function fetchExams() {
   try {
@@ -167,11 +184,11 @@ async function fetchRooms() {
   height: 100%;
 }
 
-.professor-view > * + * {
+.professor-view>*+* {
   margin-top: 1.5rem;
 }
 
-.professor-view > * {
+.professor-view>* {
   flex: 1 1 auto;
   width: 100%;
   max-height: 100vh;
