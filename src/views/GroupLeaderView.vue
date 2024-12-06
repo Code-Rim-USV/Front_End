@@ -11,7 +11,7 @@
         v-if="activeComponent === 'examScheduling'" 
         :materials="materials" 
       />
-      <GroupLeaderExamRequestsGrid :exams="examRequestsPending"  v-if="activeComponent === 'examScheduling'" />
+      <GroupLeaderExamRequestsGrid :exams="examRequestsPending" v-if="activeComponent === 'examScheduling'" />
 
       <!-- Rejected Exam grid -->
       <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import Calendar from '@/components/Calendar.vue';
 import ExamsGrid from '@/components/ExamsGrid.vue';
 import GroupLeaderExamRequestsGrid from '@/components/GroupLeaderExamRequestsGrid.vue';
@@ -36,6 +36,8 @@ const examRequestsRejected = ref([]);
 const userId = ref(null);
 const materials = ref([]);
 
+let pollingInterval = null;
+
 onMounted(() => {
   const user = JSON.parse(localStorage.getItem('user'));
   if (user) {
@@ -43,15 +45,45 @@ onMounted(() => {
     fetchExams();
     fetchMaterials();
     fetchExamRequests();
-    fetchExamRequestsRejected();  
+    fetchExamRequestsRejected();
+
+    startPolling();
   } else {
     router.push({ name: 'LoginView' });
   }
 });
 
+onUnmounted(() => {
+  stopPolling();
+});
+
 function setActiveComponent(componentName) {
   activeComponent.value = componentName;
 }
+
+function startPolling() {
+  stopPolling(); 
+  pollingInterval = setInterval(() => {
+    if (activeComponent.value === 'calendar') {
+      fetchExams();
+    } else if (activeComponent.value === 'examScheduling') {
+      fetchExamRequests();
+    }else if(activeComponent.value ==='rejectSchedules'){
+      fetchExamRequestsRejected();
+    }
+  }, 500); 
+}
+
+function stopPolling() {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
+}
+
+watch(activeComponent, () => {
+  startPolling(); 
+});
 
 async function fetchExams() {
   try {
@@ -67,7 +99,7 @@ async function fetchExamRequests() {
     const response = await api.get(`/Requests/GetByUserID/${userId.value}/Pending`);
     examRequestsPending.value = response.data;
   } catch (error) {
-    console.error('Eroare la preluarea examenelor: ', error);
+    console.error('Eroare la preluarea cererilor de examen: ', error);
   }
 }
 
@@ -76,7 +108,7 @@ async function fetchExamRequestsRejected() {
     const response = await api.get(`/Requests/GetByUserID/${userId.value}/Rejected`);
     examRequestsRejected.value = response.data;
   } catch (error) {
-    console.error('Eroare la preluarea examenelor: ', error);
+    console.error('Eroare la preluarea cererilor respinse: ', error);
   }
 }
 
@@ -84,10 +116,9 @@ async function fetchMaterials() {
   try {
     const response = await api.get('/Subjects/Get');
     materials.value = response.data.map(subject => ({
-      text: subject.subjectName, 
-      value: subject.subjectID,  
+      text: subject.subjectName,
+      value: subject.subjectID,
     }));
-    console.log(materials.value);
   } catch (error) {
     console.error('Eroare la preluarea materiilor: ', error);
   }

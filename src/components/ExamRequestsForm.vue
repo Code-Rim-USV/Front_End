@@ -74,7 +74,6 @@
   
         try {
           const response = await api.post('/Requests/Post', requestData);
-          window.location.reload();
         } catch (error) {
           console.error('Eroare la adăugarea examenului: ', error);
         }
