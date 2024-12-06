@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import Calendar from '@/components/Calendar.vue';
 import ProfessorExamGrid from '@/components/ProfessorExamsGrid.vue';
 import ProfessorSidebar from '@/components/ProfessorSidebar.vue';
@@ -28,12 +28,14 @@ import api from '@/services/api';
 const activeComponent = ref('calendar');
 const exams = ref([]);
 const requests = ref([]);
-const assistants = ref([]); 
-const rooms = ref([]); 
+const assistants = ref([]);
+const rooms = ref([]);
 const userId = ref(null);
 const showAcceptDialog = ref(false);
 const showRejectDialog = ref(false);
 const selectedRequestID = ref(null);
+
+let pollingInterval = null;
 
 onMounted(() => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -41,16 +43,45 @@ onMounted(() => {
     userId.value = user.userId;
     fetchExams();
     fetchRequests();
-    fetchAssistants(); 
+    fetchAssistants();
     fetchRooms();
+
+    startPolling();
   } else {
     router.push({ name: 'LoginView' });
   }
 });
 
+onUnmounted(() => {
+  stopPolling();
+});
+
 function setActiveComponent(componentName) {
   activeComponent.value = componentName;
 }
+
+function startPolling() {
+  stopPolling(); 
+  pollingInterval = setInterval(() => {
+    if (activeComponent.value === 'calendar') {
+      fetchExams();
+    } else if (activeComponent.value === 'applications') {
+      fetchRequests();
+      fetchExams();
+    }
+  }, 500); 
+}
+
+function stopPolling() {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
+}
+
+watch(activeComponent, () => {
+  startPolling(); 
+});
 
 function openAcceptDialog(requestID) {
   selectedRequestID.value = requestID;
@@ -91,7 +122,7 @@ async function fetchAssistants() {
     const response = await api.get('/Users/GetByRole/Assistant');
     assistants.value = response.data.map(assistant => ({
       value: assistant.userID,
-      text: `${assistant.userName}`, 
+      text: `${assistant.userName}`,
     }));
   } catch (error) {
     console.error('Eroare la preluarea asistenților: ', error);
@@ -103,7 +134,7 @@ async function fetchRooms() {
     const response = await api.get('/Locations/Get');
     rooms.value = response.data.map(room => ({
       value: room.locationID,
-      text: room.locationName, 
+      text: room.locationName,
     }));
   } catch (error) {
     console.error('Eroare la preluarea sălilor: ', error);
@@ -132,18 +163,18 @@ async function fetchRooms() {
   align-items: center;
   padding: 10px 20px;
   margin-left: 1rem;
-  overflow-y: auto; 
-  height: 100%; 
+  overflow-y: auto;
+  height: 100%;
 }
 
-.professor-view  {
+.professor-view > * + * {
   margin-top: 1.5rem;
 }
 
 .professor-view > * {
-  flex: 1 1 auto; 
+  flex: 1 1 auto;
   width: 100%;
-  max-height: 100vh; 
-  min-height: 150px;  
+  max-height: 100vh;
+  min-height: 150px;
 }
 </style>
