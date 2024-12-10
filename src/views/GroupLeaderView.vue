@@ -15,6 +15,18 @@
 
       <!-- Rejected Exam grid -->
       <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
+
+      <div v-if="errorMessage" class="error-overlay">
+        <div class="error-content">
+          <div class="error-header">
+            <div @click="errorMessage = null" class="error-close-btn">
+            ✖
+            </div>
+          </div>
+          <span class="error-message">{{ errorMessage }}</span>
+          <button @click="errorMessage = null" class="error-ok-btn">OK</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +47,7 @@ const examRequestsPending = ref([]);
 const examRequestsRejected = ref([]);
 const userId = ref(null);
 const materials = ref([]);
+const errorMessage = ref(null);
 
 let pollingInterval = null;
 
@@ -59,6 +72,10 @@ onUnmounted(() => {
 
 function setActiveComponent(componentName) {
   activeComponent.value = componentName;
+}
+
+function showError(message) {
+  errorMessage.value = message;
 }
 
 function startPolling() {
@@ -90,8 +107,8 @@ async function fetchExams() {
     const response = await api.get(`/exams/GetByUserID${userId.value}`);
     exams.value = response.data;
   } catch (error) {
-    console.error('Eroare la preluarea examenelor: ', error);
-  }
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la preluarea examenelor: ' + errorMessage);  }
 }
 
 async function fetchExamRequests() {
@@ -99,7 +116,8 @@ async function fetchExamRequests() {
     const response = await api.get(`/Requests/GetByUserID/${userId.value}/Pending`);
     examRequestsPending.value = response.data;
   } catch (error) {
-    console.error('Eroare la preluarea cererilor de examen: ', error);
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la preluarea cererilor de examen: ', errorMessage);
   }
 }
 
@@ -108,7 +126,8 @@ async function fetchExamRequestsRejected() {
     const response = await api.get(`/Requests/GetByUserID/${userId.value}/Rejected`);
     examRequestsRejected.value = response.data;
   } catch (error) {
-    console.error('Eroare la preluarea cererilor respinse: ', error);
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la preluarea cererilor respinse: ', error);
   }
 }
 
@@ -120,9 +139,21 @@ async function fetchMaterials() {
       value: subject.subjectID,
     }));
   } catch (error) {
-    console.error('Eroare la preluarea materiilor: ', error);
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la preluarea materiilor: ', errorMessage);
   }
 }
+
+function getErrorMessage(error) {
+  if (error.response) {
+    return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
+  } else if (error.request) {
+    return 'Eroare de rețea: Nu am putut să te conectăm la server.';
+  } else {
+    return ` ${error.message}`;
+  }
+}
+
 </script>
 
 <style scoped>
@@ -159,4 +190,77 @@ async function fetchMaterials() {
   max-height: 100vh;
   min-height: 150px;
 }
+
+.error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.error-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-header {
+  position: relative;
+  width: 100%;
+  margin-top: 30px; 
+}
+
+.error-close-btn {
+  position: absolute;
+  top: -40px; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.error-message {
+  font-size: 16px;
+  color: red;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.error-ok-btn {
+  background-color: transparent;
+  color: grey;
+  border: 2px solid grey;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.error-ok-btn:hover {
+  background-color: #f0f0f0;
+}
+
+
 </style>

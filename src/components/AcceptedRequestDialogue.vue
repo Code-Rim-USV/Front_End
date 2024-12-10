@@ -19,9 +19,23 @@
       </div>
     </div>
   </div>
+
+  <!-- Error overlay -->
+  <div v-if="errorMessage" class="error-overlay">
+    <div class="error-content">
+      <div class="error-header">
+        <div @click="errorMessage = null" class="error-close-btn">
+          ✖
+        </div>
+      </div>
+      <span class="error-message">{{ errorMessage }}</span>
+      <button @click="errorMessage = null" class="error-ok-btn">OK</button>
+    </div>
+  </div>
 </template>
 
 <script>
+import { ref } from 'vue';
 import api from '@/services/api';
 import ExamRequestDropInput from './ExamRequestDropInput.vue';
 import ScheduleExamHourInput from './ScheduleExamHourInput.vue';
@@ -55,9 +69,15 @@ export default {
         minutes: "00",
         isAM: true,
       },
-    }
+      errorMessage: null, // Store error message for the overlay
+    };
   },
   methods: {
+    // Method to show the error overlay
+    showError(message) {
+      this.errorMessage = message;
+    },
+
     async acceptExam() {
       try {
         const payload = {
@@ -66,16 +86,27 @@ export default {
           start_Time: `${this.selectedTime.hours}:${this.selectedTime.minutes}${this.selectedTime.isAM ? 'AM' : 'PM'}`,
           locationID: this.selectedRoom,
         };
-        console.log(payload);
+
         const response = await api.post('/Exams/PostWithRequestID', payload);
 
         if (response.status === 200) {
-          alert('Examenul a fost programat cu succes!');
           this.$emit('close');
         }
       } catch (error) {
-        console.error('Eroare la programarea examenului:', error);
-        alert('A apărut o eroare la programarea examenului. Vă rugăm să încercați din nou.');
+        // Show the error overlay instead of alerting or logging the error
+        const errorMessage = this.getErrorMessage(error);
+        this.showError('A apărut o eroare la programarea examenului: ' + errorMessage);
+      }
+    },
+
+    // Utility method to get a detailed error message
+    getErrorMessage(error) {
+      if (error.response) {
+        return error.response.data.message || error.response.statusText;
+      } else if (error.request) {
+        return 'Eroare de rețea: Nu am putut să te conectăm la server.';
+      } else {
+        return `Eroare necunoscută: ${error.message}`;
       }
     },
   },
@@ -150,5 +181,77 @@ button {
 .cancel-btn:hover {
   background: black;
   color: white;
+}
+
+/* Error overlay styles */
+.error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.error-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-header {
+  position: relative;
+  width: 100%;
+  margin-top: 30px; 
+}
+
+.error-close-btn {
+  position: absolute;
+  top: -40px; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.error-message {
+  font-size: 16px;
+  color: red;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.error-ok-btn {
+  background-color: transparent;
+  color: grey;
+  border: 2px solid grey;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.error-ok-btn:hover {
+  background-color: #f0f0f0;
 }
 </style>
