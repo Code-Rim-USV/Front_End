@@ -11,6 +11,7 @@
             <th>Sala</th>
             <th>Data</th>
             <th>Ora</th>
+            <th>Durata</th>
             <th>Editare</th>
           </tr>
         </thead>
@@ -22,6 +23,7 @@
             <td>{{ exam.location }}</td>
             <td>{{ exam.date }}</td>
             <td>{{ exam.start_Time }}</td>
+            <td>{{ exam.duration }}{{ exam.duration > 1 ? ' ore' : ' oră' }}</td>
             <td>
               <button @click="$emit('edit', exam)" class="edit-btn">
                 <span class="material-icons">edit</span>
