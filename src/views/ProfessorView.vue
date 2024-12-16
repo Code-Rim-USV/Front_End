@@ -4,9 +4,12 @@
     <div class="professor-view">
       <!-- Calendar component -->
       <Calendar :exam-dates="exams" />
-      <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" />
+      <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
       <ExamRequestsGrid :requests="requests" v-if="activeComponent === 'applications'" @accept="openAcceptDialog"
         @reject="openRejectDialog" />
+        
+      <ExamEditDialog v-if="showEditDialog" :examID="selectedExam.examID" :examData="selectedExam"
+        :assistant-options="assistants" :room-options="rooms" @close="closeDialogs" />
 
       <AcceptedRequestDialogue v-if="showAcceptDialog" :requestID="selectedRequestID" @close="closeDialogs"
         :assistant-options="assistants" :room-options="rooms" />
@@ -17,7 +20,7 @@
         <div class="error-content">
           <div class="error-header">
             <div @click="errorMessage = null" class="error-close-btn">
-            ✖
+              ✖
             </div>
           </div>
           <span class="error-message">{{ errorMessage }}</span>
@@ -34,6 +37,7 @@ import Calendar from '@/components/Calendar.vue';
 import ProfessorExamGrid from '@/components/ProfessorExamsGrid.vue';
 import ProfessorSidebar from '@/components/ProfessorSidebar.vue';
 import ExamRequestsGrid from '@/components/ExamRequestsGrid.vue';
+import ExamEditDialog from '@/components/ExamEditDialog.vue';
 import AcceptedRequestDialogue from '@/components/AcceptedRequestDialogue.vue';
 import RejectedRequestDialogue from '@/components/RejectedRequestDialogue.vue';
 import api from '@/services/api';
@@ -47,6 +51,9 @@ const userId = ref(null);
 const showAcceptDialog = ref(false);
 const showRejectDialog = ref(false);
 const selectedRequestID = ref(null);
+const selectedExam = ref({});
+const showEditDialog = ref(false);
+
 const errorMessage = ref(null);
 
 let pollingInterval = null;
@@ -79,7 +86,7 @@ function showError(message) {
 }
 
 function startPolling() {
-  stopPolling(); 
+  stopPolling();
   pollingInterval = setInterval(() => {
     if (activeComponent.value === 'calendar') {
       fetchExams();
@@ -87,7 +94,7 @@ function startPolling() {
       fetchRequests();
       fetchExams();
     }
-  }, 500); 
+  }, 500);
 }
 
 function stopPolling() {
@@ -98,8 +105,13 @@ function stopPolling() {
 }
 
 watch(activeComponent, () => {
-  startPolling(); 
+  startPolling();
 });
+
+function openEditDialog(exam) {
+  selectedExam.value = exam;
+  showEditDialog.value = true;
+}
 
 function openAcceptDialog(requestID) {
   selectedRequestID.value = requestID;
@@ -114,8 +126,10 @@ function openRejectDialog(requestID) {
 function closeDialogs() {
   showAcceptDialog.value = false;
   showRejectDialog.value = false;
+  showEditDialog.value = false;
   selectedRequestID.value = null;
 }
+
 
 async function fetchExams() {
   try {
@@ -123,7 +137,8 @@ async function fetchExams() {
     exams.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea examenelor: ' + errorMessage);  }
+    showError('Eroare la preluarea examenelor: ' + errorMessage);
+  }
 }
 
 async function fetchRequests() {
@@ -198,15 +213,12 @@ function getErrorMessage(error) {
   height: 100%;
 }
 
-.professor-view > * + * {
-  margin-top: 1.5rem;
-}
-
-.professor-view > * {
+.professor-view > *:not(.dialogue-overlay):not(.error-overlay) { 
   flex: 1 1 auto;
   width: 100%;
   max-height: 100vh;
   min-height: 150px;
+  margin-top: 1.5rem;
 }
 
 .error-overlay {
@@ -237,12 +249,12 @@ function getErrorMessage(error) {
 .error-header {
   position: relative;
   width: 100%;
-  margin-top: 30px; 
+  margin-top: 30px;
 }
 
 .error-close-btn {
   position: absolute;
-  top: -40px; 
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   background-color: red;
@@ -279,5 +291,4 @@ function getErrorMessage(error) {
 .error-ok-btn:hover {
   background-color: #f0f0f0;
 }
-
 </style>

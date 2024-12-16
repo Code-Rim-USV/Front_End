@@ -13,6 +13,18 @@
       <div class="input-area">
         <ScheduleExamHourInput v-model="selectedTime" />
       </div>
+      <div class="input-area">
+        <label>Durata examenului</label>
+        <div class="duration-selector">
+          <button 
+            v-for="duration in examDurations" 
+            :key="duration"
+            :class="['duration-btn', { active: selectedDuration === duration }]"
+            @click="selectDuration(duration)">
+            {{ duration }} h
+          </button>
+        </div>
+      </div>
       <div class="dialogue-buttons">
         <button class="confirm-btn" @click="acceptExam">Acceptă</button>
         <button class="cancel-btn" @click="$emit('close')">Anulează</button>
@@ -69,6 +81,8 @@ export default {
         minutes: "00",
         isAM: true,
       },
+      selectedDuration: 2,
+      examDurations: [1, 2, 3],
       errorMessage: null, // Store error message for the overlay
     };
   },
@@ -78,6 +92,10 @@ export default {
       this.errorMessage = message;
     },
 
+    selectDuration(duration) {
+      this.selectedDuration = duration;
+    },
+
     async acceptExam() {
       try {
         const payload = {
@@ -85,6 +103,7 @@ export default {
           assistantID: this.selectedAssistant,
           start_Time: `${this.selectedTime.hours}:${this.selectedTime.minutes}${this.selectedTime.isAM ? 'AM' : 'PM'}`,
           locationID: this.selectedRoom,
+          duration: this.selectedDuration,
         };
 
         const response = await api.post('/Exams/PostWithRequestID', payload);
@@ -253,5 +272,43 @@ button {
 
 .error-ok-btn:hover {
   background-color: #f0f0f0;
+}
+
+.duration-selector {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.duration-btn {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  color: black;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.duration-btn.active {
+  background: black;
+  color: white;
+  border-color: black;
+}
+
+.duration-btn:hover {
+  background: #f5f5f5;
+  border-color: black;
+}
+
+.duration-btn.active:hover {
+  background: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 </style>
