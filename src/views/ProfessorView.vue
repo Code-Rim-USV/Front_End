@@ -213,15 +213,12 @@ function getErrorMessage(error) {
   height: 100%;
 }
 
-.professor-view>*+* {
-  margin-top: 1.5rem;
-}
-
-.professor-view>* {
+.professor-view > *:not(.dialogue-overlay):not(.error-overlay) { 
   flex: 1 1 auto;
   width: 100%;
   max-height: 100vh;
   min-height: 150px;
+  margin-top: 1.5rem;
 }
 
 .error-overlay {

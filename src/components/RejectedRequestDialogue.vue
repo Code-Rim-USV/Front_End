@@ -1,30 +1,27 @@
 <template>
-  <div>
-    <!-- Rejection Dialog Overlay -->
-    <div class="dialogue-overlay">
-      <div class="dialogue-container">
-        <h2>Motivul respingerii</h2>
-        <div class="input-area">
-          <textarea placeholder="Introduceți motivul respingerii" v-model="rejectionReason"></textarea>
-        </div>
-        <div class="dialogue-buttons">
-          <button class="confirm-btn" @click="rejectExam">Confirmare</button>
-          <button class="cancel-btn" @click="$emit('close')">Anulare</button>
-        </div>
+  <div class="dialogue-overlay">
+    <div class="dialogue-container">
+      <h2>Motivul respingerii</h2>
+      <div class="input-area">
+        <textarea placeholder="Introduceți motivul respingerii" v-model="rejectionReason"></textarea>
+      </div>
+      <div class="dialogue-buttons">
+        <button class="confirm-btn" @click="rejectExam">Confirmare</button>
+        <button class="cancel-btn" @click="$emit('close')">Anulare</button>
       </div>
     </div>
+  </div>
 
-    <!-- Error Overlay (for rejection error) -->
-    <div v-if="errorMessage" class="error-overlay">
-      <div class="error-content">
-        <div class="error-header">
-          <div @click="errorMessage = null" class="error-close-btn">
-            ✖
-          </div>
+  <!-- Error Overlay (for rejection error) -->
+  <div v-if="errorMessage" class="error-overlay">
+    <div class="error-content">
+      <div class="error-header">
+        <div @click="errorMessage = null" class="error-close-btn">
+          ✖
         </div>
-        <span class="error-message">{{ errorMessage }}</span>
-        <button @click="errorMessage = null" class="error-ok-btn">OK</button>
       </div>
+      <span class="error-message">{{ errorMessage }}</span>
+      <button @click="errorMessage = null" class="error-ok-btn">OK</button>
     </div>
   </div>
 </template>
@@ -102,6 +99,7 @@ export default {
   padding: 20px;
   border-radius: 8px;
   width: 50%;
+  max-width: 500px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   color: black;
 }

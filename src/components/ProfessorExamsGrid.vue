@@ -105,9 +105,9 @@ tbody tr:last-child {
 }
 
 .edit-btn {
-  background-color: orange;
+  background-color: white;
   border: none;
-  color: white;
+  color: black;
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
@@ -118,6 +118,7 @@ tbody tr:last-child {
 }
 
 .edit-btn:hover {
-  background-color: darkorange;
+  background-color: black;
+  color: white;
 }
 </style>
