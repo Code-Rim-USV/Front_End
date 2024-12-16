@@ -7,12 +7,9 @@
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
       <ExamRequestsGrid :requests="requests" v-if="activeComponent === 'applications'" @accept="openAcceptDialog"
         @reject="openRejectDialog" />
-      <ExamEditDialog  v-if="showEditDialog"
-        :examID="selectedExam.examID"
-        :examData="selectedExam"
-        :assistant-options="assistants"
-        :room-options="rooms"
-        @close="closeDialogs" />
+        
+      <ExamEditDialog v-if="showEditDialog" :examID="selectedExam.examID" :examData="selectedExam"
+        :assistant-options="assistants" :room-options="rooms" @close="closeDialogs" />
 
       <AcceptedRequestDialogue v-if="showAcceptDialog" :requestID="selectedRequestID" @close="closeDialogs"
         :assistant-options="assistants" :room-options="rooms" />
@@ -23,7 +20,7 @@
         <div class="error-content">
           <div class="error-header">
             <div @click="errorMessage = null" class="error-close-btn">
-            ✖
+              ✖
             </div>
           </div>
           <span class="error-message">{{ errorMessage }}</span>
@@ -112,8 +109,8 @@ watch(activeComponent, () => {
 });
 
 function openEditDialog(exam) {
-  selectedExam.value = exam;  
-  showEditDialog.value = true;  
+  selectedExam.value = exam;
+  showEditDialog.value = true;
 }
 
 function openAcceptDialog(requestID) {
@@ -140,7 +137,8 @@ async function fetchExams() {
     exams.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea examenelor: ' + errorMessage);  }
+    showError('Eroare la preluarea examenelor: ' + errorMessage);
+  }
 }
 
 async function fetchRequests() {
@@ -254,12 +252,12 @@ function getErrorMessage(error) {
 .error-header {
   position: relative;
   width: 100%;
-  margin-top: 30px; 
+  margin-top: 30px;
 }
 
 .error-close-btn {
   position: absolute;
-  top: -40px; 
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   background-color: red;
@@ -296,5 +294,4 @@ function getErrorMessage(error) {
 .error-ok-btn:hover {
   background-color: #f0f0f0;
 }
-
 </style>

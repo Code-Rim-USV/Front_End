@@ -5,30 +5,41 @@
         <div class="input-area">
           <ExamRequestDropInput 
             label="Asistenți" 
-            :options="assistantOptions" 
+            :options="assistantOptions || []" 
             v-model="selectedAssistant"
             placeholder="Selectați asistentul" />
         </div>
         <div class="input-area">
           <ExamRequestDropInput 
             label="Sala" 
-            :options="roomOptions" 
+            :options="roomOptions || []" 
             v-model="selectedRoom" 
             placeholder="Selectați sala" />
         </div>
         <div class="input-area">
           <ScheduleExamHourInput v-model="selectedTime" />
         </div>
+        <div class="input-area">
+          <label>Durata examenului</label>
+          <div class="duration-selector">
+            <button 
+              v-for="duration in examDurations" 
+              :key="duration"
+              :class="['duration-btn', { active: selectedDuration === duration }]"
+              @click="selectDuration(duration)">
+              {{ duration }} h
+            </button>
+          </div>
+        </div>
         <div class="dialogue-buttons">
-          <button class="confirm-btn" @click="updateExam">Salvează modificările</button>
-          <button class="cancel-btn" @click="$emit('close')">Anulează</button>
+          <button class="cancel-btn" @click="handleCancel">Anulează</button>
+          <button class="confirm-btn" @click="handleConfirm">Salvează modificările</button>
         </div>
       </div>
     </div>
   </template>
   
   <script>
-  import api from '@/services/api';
   import ExamRequestDropInput from './ExamRequestDropInput.vue';
   import ScheduleExamHourInput from './ScheduleExamHourInput.vue';
   
@@ -42,76 +53,78 @@
       examData: {
         type: Object,
         required: true,
+        default: () => ({
+          assistantID: '',
+          locationID: '',
+          start_Time: '09:00',
+          duration: 2
+        })
       },
       assistantOptions: {
         type: Array,
-        required: true,
+        default: () => []
       },
       roomOptions: {
         type: Array,
-        required: true,
-      },
+        default: () => []
+      }
     },
     data() {
       return {
-        selectedAssistant: this.examData.assistantID || '',
-        selectedRoom: this.examData.locationID || '',
-        selectedTime: this.formatTime(this.examData.start_Time),
+        selectedAssistant: '',
+        selectedRoom: '',
+        selectedTime: this.initializeTime(),
+        selectedDuration: 2,
+        examDurations: [1, 2, 3],
+        isProcessing: false
       };
     },
-    watch: {
-      // Când `examData` se schimbă, actualizează valorile
-      examData: {
-        handler(newExamData) {
-          this.selectedAssistant = newExamData.assistantID || '';
-          this.selectedRoom = newExamData.locationID || '';
-          this.selectedTime = this.formatTime(newExamData.start_Time);
-        },
-        deep: true,
-      },
+    created() {
+      this.initializeData();
     },
     methods: {
-      formatTime(timeString) {
-        const [hours, minutes] = timeString.split(':');
-        const isAM = parseInt(hours) < 12;
+      initializeTime() {
         return {
-          hours: isAM ? parseInt(hours) : parseInt(hours) - 12,
-          minutes: minutes.slice(0, 2),
-          isAM: isAM,
+          hours: 9,
+          minutes: '00',
+          isAM: true
         };
       },
-      async updateExam() {
+      initializeData() {
+        this.selectedAssistant = this.examData.assistantID || '';
+        this.selectedRoom = this.examData.locationID || '';
+        this.selectedTime = this.formatTime(this.examData.start_Time || '09:00');
+        this.selectedDuration = this.examData.duration || 2;
+      },
+      formatTime(timeString) {
         try {
-          const updatedData = {};
-  
-          if (this.selectedAssistant !== this.examData.assistantID) {
-            updatedData.assistantID = this.selectedAssistant;
-          }
-          if (this.selectedTime.hours !== this.examData.start_Time.split(':')[0] || 
-              this.selectedTime.minutes !== this.examData.start_Time.split(':')[1].slice(0, 2)) {
-            updatedData.start_Time = `${this.selectedTime.hours}:${this.selectedTime.minutes}${this.selectedTime.isAM ? 'AM' : 'PM'}`;
-          }
-          if (this.selectedRoom !== this.examData.locationID) {
-            updatedData.locationID = this.selectedRoom;
-          }
-  
-          if (Object.keys(updatedData).length > 0) {
-            updatedData.examID = this.examData.examID;
-            const response = await api.put(`/Exams/Put/${this.examData.examID}`, updatedData);
-  
-            if (response.status === 200) {
-              alert('Examenul a fost actualizat cu succes!');
-              this.$emit('close');
-            }
-          } else {
-            alert('Nu au fost efectuate modificări.');
-          }
+          const [hours, minutes] = timeString.split(':');
+          const isAM = parseInt(hours) < 12;
+          return {
+            hours: isAM ? parseInt(hours) : parseInt(hours) - 12,
+            minutes: minutes.slice(0, 2),
+            isAM: isAM,
+          };
         } catch (error) {
-          console.error('Eroare la actualizarea examenului:', error);
-          alert('A apărut o eroare la actualizarea examenului. Vă rugăm să încercați din nou.');
+          console.warn('Error formatting time:', error);
+          return this.initializeTime();
         }
       },
-    },
+      selectDuration(duration) {
+        this.selectedDuration = duration;
+      },
+      handleCancel() {
+        this.$emit('close');
+      },
+      handleConfirm() {
+        this.$emit('update', {
+          assistantID: this.selectedAssistant,
+          locationID: this.selectedRoom,
+          duration: this.selectedDuration,
+          time: this.selectedTime
+        });
+      }
+    }
   };
   </script>
   
@@ -183,6 +196,44 @@
   .cancel-btn:hover {
     background: black;
     color: white;
+  }
+  
+  .duration-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  
+  .duration-btn {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: black;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .duration-btn.active {
+    background: black;
+    color: white;
+    border-color: black;
+  }
+  
+  .duration-btn:hover {
+    background: #f5f5f5;
+    border-color: black;
+  }
+  
+  .duration-btn.active:hover {
+    background: #333;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
   }
   </style>
   
