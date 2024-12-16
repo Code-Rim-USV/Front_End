@@ -118,11 +118,25 @@
     width: 100%;
   }
   
-  .logout:hover {
-    background-color: #e6f0ff;
-  }
-  
-  .logout .material-icons {
-    margin-right: 10px;
-  }
-  </style>  
+  .settings,
+.logout {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.settings:hover,
+.logout:hover {
+  background-color: #e6f0ff;
+}
+
+.settings .material-icons,
+.logout .material-icons {
+  margin-right: 10px;
+}
+
+</style>  
