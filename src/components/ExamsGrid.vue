@@ -11,6 +11,7 @@
             <th>Sala</th>
             <th>Data</th>
             <th>Ora</th>
+            <th>Durata</th>
           </tr>
         </thead>
         <tbody v-if="exams.length > 0">
@@ -21,6 +22,7 @@
             <td>{{ exam.location }}</td>
             <td>{{ exam.date }}</td>
             <td>{{ exam.start_Time }}</td>
+            <td>{{ exam.duration }}{{ exam.duration > 1 ? ' ore' : ' oră' }}</td>
           </tr>
         </tbody>
         <p v-else>Nu sunt informații</p>
