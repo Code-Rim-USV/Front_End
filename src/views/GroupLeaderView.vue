@@ -16,6 +16,8 @@
       <!-- Rejected Exam grid -->
       <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
 
+      <ComponentSettings v-if="activeComponent === 'settings'"/>
+
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
           <div class="error-header">
@@ -38,6 +40,7 @@ import ExamsGrid from '@/components/ExamsGrid.vue';
 import GroupLeaderExamRequestsGrid from '@/components/GroupLeaderExamRequestsGrid.vue';
 import RejectedExamsGrid from '@/components/RejectedExamsGrid.vue';
 import GroupLeaderSidebar from '@/components/GroupLeaderSidebar.vue';
+import ComponentSettings from '@/components/ComponentSettings.vue';
 import ExamRequestsForm from '@/components/ExamRequestsForm.vue';
 import api from '@/services/api';
 

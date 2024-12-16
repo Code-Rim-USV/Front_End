@@ -14,9 +14,15 @@
           </li>
         </ul>
       </nav>
-      <div class="logout" @click="logout">
-        <span class="material-icons">logout</span>
-        <span>Deconectare</span>
+      <div class="actions">
+        <div class="settings" @click="setActive('settings')">
+          <span class="material-icons">settings</span>
+          <span>Setari</span>
+        </div>
+        <div class="logout" @click="logout">
+          <span class="material-icons">logout</span>
+          <span>Deconectare</span>
+        </div>
       </div>
     </div>
   </template>
@@ -31,7 +37,8 @@
     },
     methods: {
       setActive(item) {
-        this.activeItem = item;
+        this.activeItem = tab;
+        this.$emit('changeComponent', tab);
       },
       logout() {
         localStorage.removeItem('user');  
@@ -70,6 +77,32 @@
     font-size: 18px;
     color: #333;
   }
+
+  .actions {
+  margin-top: auto;
+  width: 100%;
+}
+
+  .settings,
+.logout {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.settings:hover,
+.logout:hover {
+  background-color: #e6f0ff;
+}
+
+.settings .material-icons,
+.logout .material-icons {
+  margin-right: 10px;
+}
   
   nav {
     width: 100%;

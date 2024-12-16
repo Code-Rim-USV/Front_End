@@ -15,6 +15,9 @@
         :assistant-options="assistants" :room-options="rooms" />
       <RejectedRequestDialogue v-if="showRejectDialog" :requestID="selectedRequestID" @close="closeDialogs" />
 
+      <!-- Component Settings Page -->
+      <ComponentSettings v-if="activeComponent === 'settings'" />
+
       <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
@@ -40,6 +43,7 @@ import ExamRequestsGrid from '@/components/ExamRequestsGrid.vue';
 import ExamEditDialog from '@/components/ExamEditDialog.vue';
 import AcceptedRequestDialogue from '@/components/AcceptedRequestDialogue.vue';
 import RejectedRequestDialogue from '@/components/RejectedRequestDialogue.vue';
+import ComponentSettings from '@/components/ComponentSettings.vue';  // Importing the ComponentSettings component
 import api from '@/services/api';
 
 const activeComponent = ref('calendar');
@@ -176,6 +180,7 @@ async function fetchRooms() {
     showError('Eroare la preluarea sălilor: ' + errorMessage);
   }
 }
+
 function getErrorMessage(error) {
   if (error.response) {
     return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
@@ -185,7 +190,6 @@ function getErrorMessage(error) {
     return ` ${error.message}`;
   }
 }
-
 </script>
 
 <style scoped>
