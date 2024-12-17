@@ -25,7 +25,7 @@
     <div class="actions">
       <div class="settings" @click="setActive('settings')">
         <span class="material-icons">settings</span>
-        <span>Setari</span>
+        <span>Setări</span>
       </div>
       <div class="logout" @click="logout">
         <span class="material-icons">logout</span>
@@ -92,8 +92,8 @@ export default {
   width: 100%;
 }
 
-.settings,
-.logout {
+ .settings,
+ .logout {
   display: flex;
   align-items: center;
   padding: 10px;
@@ -101,7 +101,7 @@ export default {
   cursor: pointer;
   transition: background-color 0.2s;
   width: 100%;
-}
+ }
 
 .settings:hover,
 .logout:hover {
