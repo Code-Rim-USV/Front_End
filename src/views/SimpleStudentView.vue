@@ -7,6 +7,8 @@
       <div class="student-view">
         <Calendar :exam-dates="exams" />
         <ExamsGrid :exams="exams" />
+        <ComponentSettings v-if="activeComponent === 'settings'"/>
+
         <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
@@ -28,6 +30,7 @@
   import api from '@/services/api'; 
   import Calendar from '@/components/Calendar.vue';
   import ExamsGrid from '@/components/ExamsGrid.vue';
+  import ComponentSettings from '@/components/ComponentSettings.vue'
   import StudentSidebar from '@/components/StudentSidebar.vue';
   import { useRouter } from 'vue-router';
   
