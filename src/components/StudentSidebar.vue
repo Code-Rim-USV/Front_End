@@ -36,7 +36,7 @@
       };
     },
     methods: {
-      setActive(item) {
+      setActive(tab) {
         this.activeItem = tab;
         this.$emit('changeComponent', tab);
       },

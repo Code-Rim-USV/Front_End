@@ -36,6 +36,19 @@
           <button class="confirm-btn" @click="handleConfirm">Salvează modificările</button>
         </div>
       </div>
+
+      <!-- Error Overlay -->
+      <div v-if="errorMessage" class="error-overlay">
+        <div class="error-content">
+          <div class="error-header">
+            <div @click="errorMessage = null" class="error-close-btn">
+              ✖
+            </div>
+          </div>
+          <span class="error-message">{{ errorMessage }}</span>
+          <button @click="errorMessage = null" class="error-ok-btn">OK</button>
+        </div>
+      </div>
     </div>
   </template>
   
@@ -76,7 +89,7 @@
         selectedTime: this.initializeTime(),
         selectedDuration: 2,
         examDurations: [1, 2, 3],
-        isProcessing: false
+        errorMessage: null, // Add errorMessage to control the overlay visibility
       };
     },
     created() {
@@ -117,13 +130,29 @@
         this.$emit('close');
       },
       handleConfirm() {
+        if (!this.selectedAssistant) {
+          this.showError('Vă rugăm să selectați un asistent.');
+          return;
+        }
+        if (!this.selectedRoom) {
+          this.showError('Vă rugăm să selectați o sală.');
+          return;
+        }
+        if (!this.selectedTime || !this.selectedTime.hours || !this.selectedTime.minutes) {
+          this.showError('Vă rugăm să selectați o oră pentru examen.');
+          return;
+        }
+
         this.$emit('update', {
           assistantID: this.selectedAssistant,
           locationID: this.selectedRoom,
           duration: this.selectedDuration,
           time: this.selectedTime
         });
-      }
+      },
+      showError(message) {
+        this.errorMessage = message;
+      },
     }
   };
   </script>
@@ -234,6 +263,78 @@
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
+  }
+  
+  /* Error Overlay Styles */
+  .error-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .error-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .error-header {
+    position: relative;
+    width: 100%;
+    margin-top: 30px;
+  }
+  
+  .error-close-btn {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .error-message {
+    font-size: 16px;
+    color: red;
+    margin-bottom: 20px;
+    flex-grow: 1;
+  }
+  
+  .error-ok-btn {
+    background-color: transparent;
+    color: grey;
+    border: 2px solid grey;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .error-ok-btn:hover {
+    background-color: #f0f0f0;
   }
   </style>
   

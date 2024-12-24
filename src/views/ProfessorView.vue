@@ -3,7 +3,7 @@
     <ProfessorSidebar @changeComponent="setActiveComponent" />
     <div class="professor-view">
       <!-- Calendar component -->
-      <Calendar :exam-dates="exams" />
+      <Calendar :exam-dates="exams" v-if="activeComponent != 'settings'"/>
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
       <ExamRequestsGrid :requests="requests" v-if="activeComponent === 'applications'" @accept="openAcceptDialog"
         @reject="openRejectDialog" />
@@ -21,7 +21,7 @@
       <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
-          <div class="error-header">
+          <div class="error-header">  
             <div @click="errorMessage = null" class="error-close-btn">
               ✖
             </div>
@@ -98,7 +98,7 @@ function startPolling() {
       fetchRequests();
       fetchExams();
     }
-  }, 500);
+  }, 180000 );
 }
 
 function stopPolling() {
@@ -134,14 +134,13 @@ function closeDialogs() {
   selectedRequestID.value = null;
 }
 
-
 async function fetchExams() {
   try {
     const response = await api.get(`/exams/GetByUserID${userId.value}`);
     exams.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea examenelor: ' + errorMessage);
+    showError(errorMessage);
   }
 }
 
@@ -151,7 +150,7 @@ async function fetchRequests() {
     requests.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea cererilor: ' + errorMessage);
+    showError(errorMessage);
   }
 }
 
@@ -164,7 +163,7 @@ async function fetchAssistants() {
     }));
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea asistenților: ' + errorMessage);
+    showError(errorMessage);
   }
 }
 
@@ -177,17 +176,17 @@ async function fetchRooms() {
     }));
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea sălilor: ' + errorMessage);
+    showError(errorMessage);
   }
 }
 
 function getErrorMessage(error) {
   if (error.response) {
-    return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
+    return error.response.data.message || error.response.statusText;
   } else if (error.request) {
     return 'Eroare de rețea: Nu am putut să te conectăm la server.';
   } else {
-    return ` ${error.message}`;
+    return `Eroare necunoscută: ${error.message}`;
   }
 }
 </script>

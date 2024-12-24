@@ -1,13 +1,13 @@
 <template>
     <div class="layout">
       <!-- Sidebar -->
-      <StudentSidebar />
+      <StudentSidebar @changeComponent="setActiveComponent" />
     
       <!-- Main content area -->
       <div class="student-view">
-        <Calendar :exam-dates="exams" />
-        <ExamsGrid :exams="exams" />
-        <ComponentSettings v-if="activeComponent === 'settings'"/>
+        <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
+        <ExamsGrid :exams="exams" v-if="activeComponent === 'calendar'" />
+        <ComponentSettings v-if="activeComponent === 'settings'" />
 
         <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
@@ -26,7 +26,7 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue'; 
+  import { ref, onMounted, onUnmounted } from 'vue'; 
   import api from '@/services/api'; 
   import Calendar from '@/components/Calendar.vue';
   import ExamsGrid from '@/components/ExamsGrid.vue';
@@ -38,16 +38,42 @@
   const userId = ref(null);
   const router = useRouter();
   const errorMessage = ref(null);
+  const activeComponent = ref('calendar'); // Default to 'calendar'
+  
+  let pollingInterval = null;
   
   onMounted(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       userId.value = user.userId;
       fetchExams();
+      startPolling();
     } else {
       router.push({ name: 'LoginView' });
     }
   });
+
+  onUnmounted(() => {
+    stopPolling();
+  });
+
+  function setActiveComponent(componentName) {
+    activeComponent.value = componentName;
+  }
+
+  function startPolling() {
+    stopPolling();
+    pollingInterval = setInterval(() => {
+      fetchExams();
+    }, 180000);
+  }
+
+  function stopPolling() {
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+      pollingInterval = null;
+    }
+  }
 
   function showError(message) {
   errorMessage.value = message;

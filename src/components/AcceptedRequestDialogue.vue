@@ -97,6 +97,20 @@ export default {
     },
 
     async acceptExam() {
+      // Validate that all required fields are selected
+      if (!this.selectedAssistant) {
+        this.showError('Vă rugăm să selectați un asistent.');
+        return;
+      }
+      if (!this.selectedRoom) {
+        this.showError('Vă rugăm să selectați o sală.');
+        return;
+      }
+      if (!this.selectedTime || !this.selectedTime.hours || !this.selectedTime.minutes) {
+        this.showError('Vă rugăm să selectați o oră pentru examen.');
+        return;
+      }
+
       try {
         const payload = {
           requestID: this.requestID,
@@ -112,19 +126,28 @@ export default {
           this.$emit('close');
         }
       } catch (error) {
-        // Show the error overlay instead of alerting or logging the error
+        // Directly show the error message from the response
         const errorMessage = this.getErrorMessage(error);
-        this.showError('A apărut o eroare la programarea examenului: ' + errorMessage);
+        this.showError(errorMessage);
       }
     },
 
     // Utility method to get a detailed error message
     getErrorMessage(error) {
       if (error.response) {
-        return error.response.data.message || error.response.statusText;
+        // Server responded with a status code outside the 2xx range
+        if (error.response.data && error.response.data.message) {
+          return error.response.data.message;
+        } else if (error.response.statusText) {
+          return error.response.statusText;
+        } else {
+          return `Eroare de server: Cod ${error.response.status}`;
+        }
       } else if (error.request) {
+        // Request was made but no response was received
         return 'Eroare de rețea: Nu am putut să te conectăm la server.';
       } else {
+        // Something happened in setting up the request
         return `Eroare necunoscută: ${error.message}`;
       }
     },

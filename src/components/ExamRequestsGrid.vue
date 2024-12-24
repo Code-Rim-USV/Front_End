@@ -1,6 +1,6 @@
 <template>
   <div class="exam-requests-grid">
-    <h2>Solicitări Examene</h2>
+    <h2>Solicitări Examene <span class="last-updated">(Ultima actualizare: {{ lastUpdated }})</span></h2>
     <div class="table-container">
       <table>
         <thead>
@@ -39,6 +39,16 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      lastUpdated: new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' ,second: '2-digit'}),
+    };
+  },
+  watch: {
+    requests() {
+      this.lastUpdated = new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' ,second: '2-digit'});
+    },
+  },
 };
 </script>
 
@@ -58,6 +68,11 @@ h2 {
   font-size: 1.5em;
   margin-bottom: 10px;
   color: black;
+}
+
+.last-updated {
+  font-size: 0.8em;
+  color: #666;
 }
 
 p {
