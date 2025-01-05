@@ -1,14 +1,20 @@
 <template>
     <div class="layout">
       <!-- Sidebar -->
-      <StudentSidebar />
+      <StudentSidebar @changeComponent="setActiveComponent" />
     
       <!-- Main content area -->
       <div class="student-view">
-        <Calendar :exam-dates="exams" />
-        <ExamsGrid :exams="exams" />
-        <ComponentSettings v-if="activeComponent === 'settings'"/>
-
+        <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'"/>
+        <ExamsGrid :exams="exams" v-if="activeComponent === 'calendar'"/>
+        <ComponentSettings
+        v-if="activeComponent === 'settings'"
+        :username="user.username"
+        :role="user.role"
+        :email="user.email"
+        :originalPassword="user.originalPassword"
+        @saveSettings="saveUserSettings"
+      />
         <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
@@ -34,20 +40,70 @@
   import StudentSidebar from '@/components/StudentSidebar.vue';
   import { useRouter } from 'vue-router';
   
+  const activeComponent = ref('calendar');
   const exams = ref([]);
   const userId = ref(null);
   const router = useRouter();
   const errorMessage = ref(null);
+  const user = ref({
+  username: '',
+  role: '',
+  email: '',
+  password: '',
+  originalPassword: '', 
+});
+
+
+
+async function fetchUserData() {
+  try {
+    const response = await api.get(`/Users/Get/${userId.value}`);
+    //const response2 = await api.get(`/HasRoles/Get/${userId.value}`);
+    user.value = {
+      username: response.data.userName,
+      //role: response2.data.role,
+      role: '',
+      email: response.data.email,
+      originalPassword: '', 
+    };
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la preluarea datelor utilizatorului: ' + errorMessage);
+  }
+}
+
+async function saveUserSettings(updatedUser) {
+  try {
+    const payload = {
+      UserID: userId.value, 
+      Password: updatedUser.password,
+    };
+
+    await api.put(`/Users/PutPassword/${userId.value}`, payload);
+
+    user.value.originalPassword = updatedUser.password;
+
+    showError('Parola a fost schimbată cu succes!');
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la schimbarea parolei: ' + errorMessage);
+  }
+}
   
   onMounted(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       userId.value = user.userId;
       fetchExams();
+      fetchUserData();
     } else {
       router.push({ name: 'LoginView' });
     }
   });
+
+  function setActiveComponent(componentName) {
+  activeComponent.value = componentName;
+}
 
   function showError(message) {
   errorMessage.value = message;

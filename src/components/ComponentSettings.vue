@@ -1,47 +1,37 @@
 <template>
   <div>
-    <!-- Settings Form -->
     <div class="settings-container">
       <h2>SETĂRI</h2>
-
       <div class="input-group">
         <label for="username" class="input-label">Nume utilizator</label>
-        <input type="text" id="username" v-model="username" class="input-field" disabled />
+        <input type="text" id="username" :value="username" class="input-field" disabled />
       </div>
 
       <div class="input-group">
         <label for="role" class="input-label">Rol</label>
-        <input type="text" id="role" v-model="role" class="input-field" disabled />
+        <input type="text" id="role" :value="role" class="input-field" disabled />
       </div>
 
       <div class="input-group">
         <label for="email" class="input-label">Email</label>
-        <input type="email" id="email" v-model="email" class="input-field" disabled />
+        <input type="email" id="email" :value="email" class="input-field" disabled />
       </div>
 
       <div class="input-group">
         <label for="newPassword" class="input-label">Parolă nouă</label>
-        <input type="password" id="newPassword" v-model="password" class="input-field" placeholder="Introduceți parola" />
+        <input
+          type="password"
+          id="newPassword"
+          v-model="password"
+          class="input-field"
+          placeholder="Introduceți parola"
+        />
       </div>
 
-      <!-- Save Button (Centered) -->
       <div class="save-button-container">
-        <button class="save-button" @click="saveSettings" :disabled="isFormInvalid || !isPasswordChanged">
+        <button class="save-button" @click="saveSettings" :disabled="!isPasswordChanged">
           Salvează
         </button>
-      </div>
-    </div>
-
-    <!-- Error Overlay (for errors in form submission) -->
-    <div v-if="errorMessage" class="error-overlay">
-      <div class="error-content">
-        <div class="error-header">
-          <div @click="errorMessage = null" class="error-close-btn">
-            ✖
-          </div>
-        </div>
-        <span class="error-message">{{ errorMessage }}</span>
-        <button @click="errorMessage = null" class="error-ok-btn">OK</button>
       </div>
     </div>
   </div>
@@ -49,50 +39,33 @@
 
 <script>
 export default {
+  props: {
+    username: String,
+    role: String,
+    email: String,
+    originalPassword: String,
+  },
+  emits: ['saveSettings'],
   data() {
     return {
-      username: '',
-      role: '',
-      email: '',
       password: '',
-      originalPassword: '', // Store the initial value of the password field
-      errorMessage: null // Store error message for the error overlay
     };
   },
   computed: {
-    isFormInvalid() {
-      return !this.password; // Button will be disabled if password is empty
-    },
     isPasswordChanged() {
-      // Button is enabled only if password is changed
-      return this.password !== this.originalPassword;
-    }
+      return this.password !== this.originalPassword && this.password !== '';
+    },
   },
   methods: {
     saveSettings() {
-      if (this.isFormInvalid) {
-        this.showError("Parola nu poate fi goală.");
-        return;
-      }
-
-      // Simulate a potential error from the server (this is just for demo purposes)
-      // In a real scenario, this would be replaced with an actual API call
-      const isError = Math.random() < 0.5; // Randomly simulate error
-
-      if (isError) {
-        this.showError("A apărut o eroare la salvarea setărilor.");
-      } else {
-        // Success case (you can replace this with actual saving logic)
-        console.log("Settings saved successfully.");
-        this.originalPassword = this.password; // Update the original password to the new value
-      }
+      this.$emit('saveSettings', {
+        username: this.username,
+        role: this.role,
+        email: this.email,
+        password: this.password,
+      });
     },
-
-    // Method to show error message in overlay
-    showError(message) {
-      this.errorMessage = message;
-    }
-  }
+  },
 };
 </script>
 
@@ -129,7 +102,7 @@ h2 {
 .input-field {
   padding: 10px;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid #949292;
   border-radius: 4px;
   width: 100%;
 }
@@ -139,18 +112,16 @@ h2 {
   border-color: #4caf50;
 }
 
-/* Disabled Input Styles */
 .input-field:disabled {
   background-color: #f1f1f1;
-  cursor: not-allowed; /* Change cursor to no entry sign */
-  color: #ccc;
+  cursor: not-allowed;
+  color: #949292;
   border-color: #ddd;
 }
 
-/* Save Button Styles */
 .save-button-container {
   display: flex;
-  justify-content: center; /* Center the button */
+  justify-content: center;
   margin-top: 20px;
 }
 
@@ -174,7 +145,6 @@ h2 {
   cursor: not-allowed;
 }
 
-/* Error Overlay Styles */
 .error-overlay {
   position: fixed;
   top: 0;

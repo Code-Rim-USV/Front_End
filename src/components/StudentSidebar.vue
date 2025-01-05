@@ -15,7 +15,7 @@
         </ul>
       </nav>
       <div class="actions">
-        <div class="settings" @click="setActive('settings')">
+        <div class="settings" :class="{ active: activeItem === 'settings'}" @click="setActive('settings')">
           <span class="material-icons">settings</span>
           <span>Setari</span>
         </div>
@@ -36,13 +36,12 @@
       };
     },
     methods: {
-      setActive(item) {
+      setActive(tab) {
         this.activeItem = tab;
         this.$emit('changeComponent', tab);
       },
       logout() {
         localStorage.removeItem('user');  
-  
         this.$router.push({ name: 'LoginView' });  
       },
     },
