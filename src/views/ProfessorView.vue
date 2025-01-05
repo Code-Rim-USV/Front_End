@@ -3,7 +3,7 @@
     <ProfessorSidebar @changeComponent="setActiveComponent" />
     <div class="professor-view">
       <!-- Calendar component -->
-      <Calendar :exam-dates="exams" />
+      <Calendar :exam-dates="exams" v-if="activeComponent != 'settings'"/>
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
       <ExamRequestsGrid :requests="requests" v-if="activeComponent === 'applications'" @accept="openAcceptDialog"
         @reject="openRejectDialog" />
@@ -98,7 +98,7 @@ function startPolling() {
       fetchRequests();
       fetchExams();
     }
-  }, 500);
+  }, 180000);
 }
 
 function stopPolling() {
