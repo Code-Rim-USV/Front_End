@@ -23,7 +23,7 @@
       </ul>
     </nav>
     <div class="actions">
-      <div class="settings" @click="setActive('settings')">
+      <div class="settings" :class="{ active: activeItem === 'settings' }" @click="setActive('settings')">
         <span class="material-icons">settings</span>
         <span>Setări</span>
       </div>
@@ -32,7 +32,6 @@
         <span>Deconectare</span>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -47,16 +46,16 @@ export default {
   methods: {
     setActive(tab) {
       this.activeItem = tab;
-      this.$emit('changeComponent', tab);
+      this.$emit("changeComponent", tab);
     },
     logout() {
-      localStorage.removeItem('user');
-
-      this.$router.push({ name: 'LoginView' });
+      localStorage.removeItem("user");
+      this.$router.push({ name: "LoginView" });
     },
   },
 };
 </script>
+
 
 <style scoped>
 .sidebar {

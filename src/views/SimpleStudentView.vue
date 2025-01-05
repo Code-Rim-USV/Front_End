@@ -1,114 +1,112 @@
 <template>
-    <div class="layout">
-      <!-- Sidebar -->
-      <StudentSidebar />
-    
-      <!-- Main content area -->
-      <div class="student-view">
-        <Calendar :exam-dates="exams" />
-        <ExamsGrid :exams="exams" />
-        <ComponentSettings v-if="activeComponent === 'settings'"/>
-
-        <!-- Error overlay -->
+  <div class="layout">
+    <StudentSidebar @changeComponent="setActiveComponent" />
+    <div class="student-view">
+      <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
+      <ExamsGrid :exams="exams" v-if="activeComponent === 'calendar'" />
+      <ComponentSettings v-if="activeComponent === 'settings'" />
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
           <div class="error-header">
-            <div @click="errorMessage = null" class="error-close-btn">
-            ✖
-            </div>
+            <div @click="errorMessage = null" class="error-close-btn">✖</div>
           </div>
           <span class="error-message">{{ errorMessage }}</span>
           <button @click="errorMessage = null" class="error-ok-btn">OK</button>
         </div>
       </div>
-      </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue'; 
-  import api from '@/services/api'; 
-  import Calendar from '@/components/Calendar.vue';
-  import ExamsGrid from '@/components/ExamsGrid.vue';
-  import ComponentSettings from '@/components/ComponentSettings.vue'
-  import StudentSidebar from '@/components/StudentSidebar.vue';
-  import { useRouter } from 'vue-router';
-  
-  const exams = ref([]);
-  const userId = ref(null);
-  const router = useRouter();
-  const errorMessage = ref(null);
-  
-  onMounted(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-      userId.value = user.userId;
-      fetchExams();
-    } else {
-      router.push({ name: 'LoginView' });
-    }
-  });
+  </div>
+</template>
 
-  function showError(message) {
+<script setup>
+import { ref, onMounted } from "vue";
+import api from "@/services/api";
+import Calendar from "@/components/Calendar.vue";
+import ExamsGrid from "@/components/ExamsGrid.vue";
+import ComponentSettings from "@/components/ComponentSettings.vue";
+import StudentSidebar from "@/components/StudentSidebar.vue";
+import { useRouter } from "vue-router";
+
+const exams = ref([]);
+const userId = ref(null);
+const router = useRouter();
+const errorMessage = ref(null);
+const activeComponent = ref("calendar");
+
+function setActiveComponent(componentName) {
+  activeComponent.value = componentName;
+}
+
+onMounted(() => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    userId.value = user.userId;
+    fetchExams();
+  } else {
+    router.push({ name: "LoginView" });
+  }
+});
+
+async function fetchExams() {
+  try {
+    const response = await api.get(`/exams/GetByUserID${userId.value}`);
+    exams.value = response.data;
+  } catch (error) {
+    showError("Eroare la preluarea examenelor: " + getErrorMessage(error));
+  }
+}
+
+function showError(message) {
   errorMessage.value = message;
 }
-  
-  async function fetchExams() {
-    try {
-      const response = await api.get(`/exams/GetByUserID${userId.value}`);
-      exams.value = response.data; 
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      showError('Eroare la preluarea examenelor: ', error);
-    }
-  }
 
-  function getErrorMessage(error) {
+function getErrorMessage(error) {
   if (error.response) {
     return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
   } else if (error.request) {
-    return 'Eroare de rețea: Nu am putut să te conectăm la server.';
+    return "Eroare de rețea: Nu am putut să te conectăm la server.";
   } else {
     return ` ${error.message}`;
   }
 }
-  </script>
-  <style scoped>
-  .layout {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: row;
-    background-color: #EAEAEA;
-    overflow: hidden;
-  }
-  
-  .student-view {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 20px;
-    margin-left: 1rem;
-    overflow-y: auto; 
-    height: 100%; 
-  }
-  
-  .student-view > * + * {
-    margin-top: 1.5rem;
-  }
-  
-  .student-view > * {
-    flex: 1 1 auto; 
-    width: 100%;
-    max-height: calc(100vh - 100px); 
-    min-height: 150px;  
-  }
-  
-  .error-overlay {
+</script>
+
+<style scoped>
+.layout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  background-color: #eaeaea;
+  overflow: hidden;
+}
+
+.student-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px;
+  margin-left: 1rem;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.student-view > * + * {
+  margin-top: 1.5rem;
+}
+
+.student-view > * {
+  flex: 1 1 auto;
+  width: 100%;
+  max-height: calc(100vh - 100px);
+  min-height: 150px;
+}
+
+.error-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -136,12 +134,12 @@
 .error-header {
   position: relative;
   width: 100%;
-  margin-top: 30px; 
+  margin-top: 30px;
 }
 
 .error-close-btn {
   position: absolute;
-  top: -40px; 
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   background-color: red;
@@ -178,6 +176,4 @@
 .error-ok-btn:hover {
   background-color: #f0f0f0;
 }
-
-  </style>
-  
+</style>
