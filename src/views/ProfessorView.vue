@@ -4,6 +4,7 @@
     <div class="professor-view">
       <!-- Calendar component -->
       <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
+
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
 
       <div v-if="activeComponent === 'applications'">
@@ -154,7 +155,7 @@ function startPolling() {
       fetchRequests();
       fetchExams();
     }
-  }, 500);
+  }, 180000);
 }
 
 function stopPolling() {

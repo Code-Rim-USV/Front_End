@@ -1,11 +1,12 @@
 <template>
-    <div class="student-sidebar">
-      <div class="logo">
-        <img src="../assets/LogoUSV.png" alt="USV Logo" />
-        <span>
-          <h2>USV FIESC</h2>
-        </span>
-      </div>
+  <div class="student-sidebar">
+    <div class="logo">
+      <img src="../assets/LogoUSV.png" alt="USV Logo" />
+      <span>
+        <h2>USV FIESC</h2>
+      </span>
+    </div>
+   
       <nav>
         <ul>
           <li :class="{ active: activeItem === 'calendar' }" @click="setActive('calendar')">
@@ -25,16 +26,17 @@
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "StudentSidebarComponent", 
-    data() {
-      return {
-        activeItem: "calendar", 
-      };
-    },
+  </div>
+</template>
+
+<script>
+export default {
+  name: "StudentSidebarComponent",
+  data() {
+    return {
+      activeItem: "calendar",
+    };
+  },
     methods: {
       setActive(tab) {
         this.activeItem = tab;
@@ -45,44 +47,45 @@
         this.$router.push({ name: 'LoginView' });  
       },
     },
-  };
-  </script>
-  
-  <style scoped>
-  .student-sidebar {
-    width: 15%;
-    background-color: #fff;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    height: 100vh;
-    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .logo img {
-    height: 40px;
-    margin-right: 10px;
-  }
-  
-  .logo span {
-    font-weight: bold;
-    font-size: 18px;
-    color: #333;
-  }
+  },
+};
+</script>
 
-  .actions {
+<style scoped>
+.student-sidebar {
+  width: 15%;
+  background-color: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100vh;
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.logo span {
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+.actions {
   margin-top: auto;
   width: 100%;
 }
 
-  .settings,
+.settings,
 .logout {
   display: flex;
   align-items: center;
@@ -102,54 +105,53 @@
 .logout .material-icons {
   margin-right: 10px;
 }
-  
-  nav {
-    width: 100%;
-  }
-  
-  nav ul {
-    list-style-type: none;
-    padding: 0;
-    width: 100%;
-  }
-  
-  nav ul li {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    font-size: 16px;
-    color: #157def;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    width: 100%;
-  }
-  
-  nav ul li.active,
-  nav ul li:hover {
-    background-color: #eff6ff;
-  }
-  
-  nav ul li .material-icons {
-    margin-right: 10px;
-  }
-  
-  .logout {
-    margin-top: auto;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    width: 100%;
-  }
-  
-  .logout:hover {
-    background-color: #e6f0ff;
-  }
-  
-  .logout .material-icons {
-    margin-right: 10px;
-  }
-  </style>
-  
+
+nav {
+  width: 100%;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+}
+
+nav ul li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 16px;
+  color: #157def;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+nav ul li.active,
+nav ul li:hover {
+  background-color: #eff6ff;
+}
+
+nav ul li .material-icons {
+  margin-right: 10px;
+}
+
+.logout {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.logout:hover {
+  background-color: #e6f0ff;
+}
+
+.logout .material-icons {
+  margin-right: 10px;
+}
+</style>

@@ -25,6 +25,7 @@
         @saveSettings="saveUserSettings"
       />
 
+
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
           <div class="error-header">
@@ -88,22 +89,17 @@ async function fetchUserData() {
 
 async function saveUserSettings(updatedUser) {
   try {
-    // Ensure the payload aligns with the UserPutPasswordDTO structure
     const payload = {
       UserID: userId.value, // `userId` is already obtained during the FE initialization
       Password: updatedUser.password,
     };
 
-    // Send PUT request to the appropriate endpoint
     await api.put(`/Users/PutPassword/${userId.value}`, payload);
 
-    // Update the stored original password in FE
     user.value.originalPassword = updatedUser.password;
 
-    // Notify the user of success
     showError('Parola a fost schimbată cu succes!');
   } catch (error) {
-    // Handle errors gracefully
     const errorMessage = getErrorMessage(error);
     showError('Eroare la schimbarea parolei: ' + errorMessage);
   }

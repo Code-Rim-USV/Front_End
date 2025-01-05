@@ -61,7 +61,7 @@ export default {
       material: "",
       date: "",
       formStatus: "",
-      errorMessage: null, // Store error message for the error overlay
+      errorMessage: null, 
     };
   },
   computed: {
@@ -70,7 +70,6 @@ export default {
     },
   },
   methods: {
-    // Method to show error message in overlay
     showError(message) {
       this.errorMessage = message;
     },
@@ -97,19 +96,15 @@ export default {
       try {
         const response = await api.post('/Requests/Post', requestData);
 
-        // Optionally handle success here, if needed (like showing a success message)
-
       } catch (error) {
         const errorMessage = this.getErrorMessage(error);
         this.showError("A apărut o eroare la adăugarea examenului: " + errorMessage);
       }
 
-      // Reset form
       this.material = "";
       this.date = "";
     },
 
-    // Utility method to get detailed error message
     getErrorMessage(error) {
       if (error.response) {
         return error.response.data.message || error.response.statusText;
