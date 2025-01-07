@@ -6,24 +6,25 @@
         <h2>USV FIESC</h2>
       </span>
     </div>
-    <nav>
-      <ul>
-        <li :class="{ active: activeItem === 'calendar' }" @click="setActive('calendar')">
-          <span class="material-icons">calendar_today</span>
-          <span>Calendar</span>
-        </li>
-      </ul>
-    </nav>
-    <div class="actions">
-      <div :class="{ active: activeItem === 'settings' }" class="settings" @click="setActive('settings')">
-        <span class="material-icons">settings</span>
-        <span>Setări</span>
+   
+      <nav>
+        <ul>
+          <li :class="{ active: activeItem === 'calendar' }" @click="setActive('calendar')">
+            <span class="material-icons">calendar_today</span>
+            <span>Calendar</span>
+          </li>
+        </ul>
+      </nav>
+      <div class="actions">
+        <div class="settings" :class="{ active: activeItem === 'settings'}" @click="setActive('settings')">
+          <span class="material-icons">settings</span>
+          <span>Setari</span>
+        </div>
+        <div class="logout" @click="logout">
+          <span class="material-icons">logout</span>
+          <span>Deconectare</span>
+        </div>
       </div>
-      <div class="logout" @click="logout">
-        <span class="material-icons">logout</span>
-        <span>Deconectare</span>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -35,17 +36,17 @@ export default {
       activeItem: "calendar",
     };
   },
-  methods: {
-    setActive(item) {
-      this.activeItem = item;
-      this.$emit("changeComponent", item);
+    methods: {
+      setActive(tab) {
+        this.activeItem = tab;
+        this.$emit('changeComponent', tab);
+      },
+      logout() {
+        localStorage.removeItem('user');  
+        this.$router.push({ name: 'LoginView' });  
+      },
     },
-    logout() {
-      localStorage.removeItem("user");
-      this.$router.push({ name: "LoginView" });
-    },
-  },
-};
+  };
 </script>
 
 <style scoped>
