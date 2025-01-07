@@ -61,7 +61,7 @@ export default {
       material: "",
       date: "",
       formStatus: "",
-      errorMessage: null, // Store error message for the error overlay
+      errorMessage: null, 
     };
   },
   computed: {
@@ -70,7 +70,6 @@ export default {
     },
   },
   methods: {
-    // Method to show error message in overlay
     showError(message) {
       this.errorMessage = message;
     },
@@ -96,18 +95,23 @@ export default {
 
       try {
         const response = await api.post('/Requests/Post', requestData);
-        this.$emit('refresh-grid');
-        // Reset form on success
-        this.material = "";
-        this.date = "";
+
       } catch (error) {
-        if (error.response) {
-          this.showError(error.response.data);
-        } else if (error.request) {
-          this.showError('Nu s-a putut stabili conexiunea cu serverul. Verificați conexiunea la internet.');
-        } else {
-          this.showError('A apărut o eroare neașteptată.');
-        }
+        const errorMessage = this.getErrorMessage(error);
+        this.showError("A apărut o eroare la adăugarea examenului: " + errorMessage);
+      }
+
+      this.material = "";
+      this.date = "";
+    },
+
+    getErrorMessage(error) {
+      if (error.response) {
+        return error.response.data.message || error.response.statusText;
+      } else if (error.request) {
+        return 'Eroare de rețea: Nu am putut să te conectăm la server.';
+      } else {
+        return `Eroare necunoscută: ${error.message}`;
       }
     },
   },

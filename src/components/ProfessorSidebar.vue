@@ -19,17 +19,17 @@
         </ul>
       </nav>
       <div class="actions">
-      <div class="settings" @click="setActive('settings')">
-        <span class="material-icons">settings</span>
-        <span>Setări</span>
-      </div>
-      <div class="logout" @click="logout">
-        <span class="material-icons">logout</span>
-        <span>Deconectare</span>
+        <div class="settings" @click="setActive('settings')">
+          <span class="material-icons">settings</span>
+          <span>Setări</span>
+        </div>
+        <div class="logout" @click="logout">
+          <span class="material-icons">logout</span>
+          <span>Deconectare</span>
+        </div>
       </div>
     </div>
-    </div>
-  </template>
+</template>
   
   <script>
   export default {

@@ -17,7 +17,7 @@
       <!-- Rejected Exam grid -->
       <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
 
-      <ComponentSettings v-if="activeComponent === 'settings'"/>
+      <ComponentSettings v-if="activeComponent === 'settings'" />
 
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
