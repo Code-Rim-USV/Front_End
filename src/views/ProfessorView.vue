@@ -85,11 +85,10 @@ const user = ref({
 async function fetchUserData() {
   try {
     const response = await api.get(`/Users/Get/${userId.value}`);
-    //const response2 = await api.get(`/HasRoles/Get/${userId.value}`);
+    const response2 = await api.get(`/HasRoles/Get/${userId.value}`);
     user.value = {
       username: response.data.userName,
-      //role: response2.data.role,
-      role: '',
+      role: response2.data.role,
       email: response.data.email,
       originalPassword: '', 
     };
