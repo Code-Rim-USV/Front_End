@@ -25,7 +25,6 @@
           <span>Deconectare</span>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -47,8 +46,7 @@ export default {
         this.$router.push({ name: 'LoginView' });  
       },
     },
-  },
-};
+  };
 </script>
 
 <style scoped>
