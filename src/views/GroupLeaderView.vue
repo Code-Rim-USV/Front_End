@@ -16,7 +16,15 @@
       <!-- Rejected Exam grid -->
       <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
 
-      <ComponentSettings v-if="activeComponent === 'settings'" />
+      <ComponentSettings
+        v-if="activeComponent === 'settings'"
+        :username="user.username"
+        :role="user.role"
+        :email="user.email"
+        :originalPassword="user.originalPassword"
+        @saveSettings="saveUserSettings"
+      />
+
 
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
@@ -54,6 +62,48 @@ const errorMessage = ref(null);
 
 let pollingInterval = null;
 
+const user = ref({
+  username: '',
+  role: '',
+  email: '',
+  password: '',
+  originalPassword: '', 
+});
+
+async function fetchUserData() {
+  try {
+    const response = await api.get(`/Users/Get/${userId.value}`);
+    const response2 = await api.get(`/HasRoles/Get/${userId.value}`);
+    user.value = {
+      username: response.data.userName,
+      role: response2.data.role,
+      email: response.data.email,
+      originalPassword: '', 
+    };
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la preluarea datelor utilizatorului: ' + errorMessage);
+  }
+}
+
+async function saveUserSettings(updatedUser) {
+  try {
+    const payload = {
+      UserID: userId.value, // `userId` is already obtained during the FE initialization
+      Password: updatedUser.password,
+    };
+
+    await api.put(`/Users/PutPassword/${userId.value}`, payload);
+
+    user.value.originalPassword = updatedUser.password;
+
+    showError('Parola a fost schimbată cu succes!');
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la schimbarea parolei: ' + errorMessage);
+  }
+}
+
 onMounted(() => {
   const user = JSON.parse(localStorage.getItem('user'));
   if (user) {
@@ -62,7 +112,7 @@ onMounted(() => {
     fetchMaterials();
     fetchExamRequests();
     fetchExamRequestsRejected();
-
+    fetchUserData();
     startPolling();
   } else {
     router.push({ name: 'LoginView' });

@@ -3,10 +3,17 @@
     <ProfessorSidebar @changeComponent="setActiveComponent" />
     <div class="professor-view">
       <!-- Calendar component -->
-      <Calendar :exam-dates="exams" v-if="activeComponent != 'settings'"/>
+      <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
+
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
-      <ExamRequestsGrid :requests="requests" v-if="activeComponent === 'applications'" @accept="openAcceptDialog"
+
+      <div v-if="activeComponent === 'applications'">
+        <Calendar :exam-dates="examRequestsPending" />
+        <ExamRequestsGrid :requests="requests" @accept="openAcceptDialog"
         @reject="openRejectDialog" />
+      </div>
+
+      
         
       <ExamEditDialog v-if="showEditDialog" :examID="selectedExam.examID" :examData="selectedExam"
         :assistant-options="assistants" :room-options="rooms" @close="closeDialogs" />
@@ -16,7 +23,14 @@
       <RejectedRequestDialogue v-if="showRejectDialog" :requestID="selectedRequestID" @close="closeDialogs" />
 
       <!-- Component Settings Page -->
-      <ComponentSettings v-if="activeComponent === 'settings'" />
+      <ComponentSettings
+        v-if="activeComponent === 'settings'"
+        :username="user.username"
+        :role="user.role"
+        :email="user.email"
+        :originalPassword="user.originalPassword"
+        @saveSettings="saveUserSettings"
+      />
 
       <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
@@ -43,7 +57,7 @@ import ExamRequestsGrid from '@/components/ExamRequestsGrid.vue';
 import ExamEditDialog from '@/components/ExamEditDialog.vue';
 import AcceptedRequestDialogue from '@/components/AcceptedRequestDialogue.vue';
 import RejectedRequestDialogue from '@/components/RejectedRequestDialogue.vue';
-import ComponentSettings from '@/components/ComponentSettings.vue';  // Importing the ComponentSettings component
+import ComponentSettings from '@/components/ComponentSettings.vue';
 import api from '@/services/api';
 
 const activeComponent = ref('calendar');
@@ -57,10 +71,51 @@ const showRejectDialog = ref(false);
 const selectedRequestID = ref(null);
 const selectedExam = ref({});
 const showEditDialog = ref(false);
-
 const errorMessage = ref(null);
-
 let pollingInterval = null;
+
+const user = ref({
+  username: '',
+  role: '',
+  email: '',
+  password: '',
+  originalPassword: '', 
+});
+
+async function fetchUserData() {
+  try {
+    const response = await api.get(`/Users/Get/${userId.value}`);
+    const response2 = await api.get(`/HasRoles/Get/${userId.value}`);
+    user.value = {
+      username: response.data.userName,
+      role: response2.data.role,
+      email: response.data.email,
+      originalPassword: '', 
+    };
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la preluarea datelor utilizatorului: ' + errorMessage);
+  }
+}
+
+async function saveUserSettings(updatedUser) {
+  try {
+    const payload = {
+      UserID: userId.value, 
+      Password: updatedUser.password,
+    };
+
+    await api.put(`/Users/PutPassword/${userId.value}`, payload);
+
+    user.value.originalPassword = updatedUser.password;
+
+    showError('Parola a fost schimbată cu succes!');
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la schimbarea parolei: ' + errorMessage);
+  }
+}
+
 
 onMounted(() => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -70,6 +125,7 @@ onMounted(() => {
     fetchRequests();
     fetchAssistants();
     fetchRooms();
+    fetchUserData();
 
     startPolling();
   } else {
@@ -133,7 +189,6 @@ function closeDialogs() {
   showEditDialog.value = false;
   selectedRequestID.value = null;
 }
-
 
 async function fetchExams() {
   try {
@@ -224,6 +279,7 @@ function getErrorMessage(error) {
   min-height: 150px;
   margin-top: 1.5rem;
 }
+
 
 .error-overlay {
   position: fixed;
