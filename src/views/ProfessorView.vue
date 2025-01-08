@@ -7,11 +7,9 @@
 
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
 
-      <div v-if="activeComponent === 'applications'">
-        <Calendar :exam-dates="examRequestsPending" />
+        <Calendar :exam-dates="examRequestsPending" v-if="activeComponent === 'applications'"/>
         <ExamRequestsGrid :requests="requests" @accept="openAcceptDialog"
-        @reject="openRejectDialog" />
-      </div>
+        @reject="openRejectDialog" v-if="activeComponent === 'applications'"/>
 
       
         
