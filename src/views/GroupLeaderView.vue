@@ -10,6 +10,7 @@
       <ExamRequestsForm 
         v-if="activeComponent === 'examScheduling'" 
         :materials="materials" 
+        @refresh-grid="fetchExamRequests"
       />
       <GroupLeaderExamRequestsGrid :exams="examRequestsPending" v-if="activeComponent === 'examScheduling'" />
 
@@ -141,7 +142,7 @@ function startPolling() {
     }else if(activeComponent.value ==='rejectSchedules'){
       fetchExamRequestsRejected();
     }
-  }, 500); 
+  }, 120000 ); 
 }
 
 function stopPolling() {
@@ -161,7 +162,8 @@ async function fetchExams() {
     exams.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea examenelor: ' + errorMessage);  }
+    showError(`Eroare la preluarea examenelor: ${errorMessage}`);
+  }
 }
 
 async function fetchExamRequests() {
@@ -170,7 +172,7 @@ async function fetchExamRequests() {
     examRequestsPending.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea cererilor de examen: ', errorMessage);
+    showError(`Eroare la preluarea cererilor de examen: ${errorMessage}`);
   }
 }
 
@@ -180,7 +182,7 @@ async function fetchExamRequestsRejected() {
     examRequestsRejected.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea cererilor respinse: ', error);
+    showError(`Eroare la preluarea cererilor respinse: ${errorMessage}`);
   }
 }
 
@@ -193,17 +195,29 @@ async function fetchMaterials() {
     }));
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea materiilor: ', errorMessage);
+    showError(`Eroare la preluarea materiilor: ${errorMessage}`);
   }
 }
 
 function getErrorMessage(error) {
-  if (error.response) {
-    return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
+  if (error.response && error.response.data) {
+    // Handle structured error response
+    if (error.response.data.message) {
+      return error.response.data.message;
+    }
+    // Handle validation errors array
+    if (Array.isArray(error.response.data.errors)) {
+      return error.response.data.errors.join(', ');
+    }
+    // Handle simple error message
+    if (typeof error.response.data === 'string') {
+      return error.response.data;
+    }
+    return `Eroare de server (${error.response.status})`;
   } else if (error.request) {
-    return 'Eroare de rețea: Nu am putut să te conectăm la server.';
+    return 'Nu s-a putut stabili conexiunea cu serverul. Verificați conexiunea la internet.';
   } else {
-    return ` ${error.message}`;
+    return `${error.message}`;
   }
 }
 
