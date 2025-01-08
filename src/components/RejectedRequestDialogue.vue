@@ -66,6 +66,7 @@ export default {
 
         if (response.status === 204) {
           this.$emit('close');
+          window.location.reload();
         }
       } catch (error) {
         const errorMessage = this.getErrorMessage(error);
@@ -86,10 +87,7 @@ export default {
       } else if (error.request) {
         // Request was made but no response was received
         return 'Eroare de rețea: Nu am putut să te conectăm la server.';
-      } else {
-        // Something happened in setting up the request
-        return `Eroare necunoscută: ${error.message}`;
-      }
+      }else return `${error.message}`;
     },
   },
 };

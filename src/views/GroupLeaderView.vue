@@ -142,7 +142,7 @@ function startPolling() {
     }else if(activeComponent.value ==='rejectSchedules'){
       fetchExamRequestsRejected();
     }
-  }, 180000 ); 
+  }, 120000 ); 
 }
 
 function stopPolling() {
@@ -217,7 +217,7 @@ function getErrorMessage(error) {
   } else if (error.request) {
     return 'Nu s-a putut stabili conexiunea cu serverul. Verificați conexiunea la internet.';
   } else {
-    return error.message || 'A apărut o eroare neașteptată.';
+    return `${error.message}`;
   }
 }
 

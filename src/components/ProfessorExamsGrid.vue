@@ -29,7 +29,7 @@
             <td>{{ exam.start_Time }}</td>
             <td>{{ exam.duration }}{{ exam.duration > 1 ? ' ore' : ' oră' }}</td>
             <td>
-              <button @click="$emit('edit', exam)" class="edit-btn">
+              <button @click="$emit('edit', exam.examID)" class="edit-btn">
                 <span class="material-icons">edit</span>
               </button>
             </td>
