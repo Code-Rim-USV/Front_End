@@ -10,9 +10,13 @@
       <ExamRequestsForm 
         v-if="activeComponent === 'examScheduling'" 
         :materials="materials" 
-        @refresh-grid="fetchExamRequests"
+        @request-added="handleRequestAdded"
       />
-      <GroupLeaderExamRequestsGrid :exams="examRequestsPending" v-if="activeComponent === 'examScheduling'" />
+      <GroupLeaderExamRequestsGrid 
+        ref="examRequestsGrid"
+        :exams="examRequestsPending"
+        v-if="activeComponent === 'examScheduling'" 
+      />
 
       <!-- Rejected Exam grid -->
       <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
@@ -142,7 +146,7 @@ function startPolling() {
     }else if(activeComponent.value ==='rejectSchedules'){
       fetchExamRequestsRejected();
     }
-  }, 120000 ); 
+  }, 500); 
 }
 
 function stopPolling() {
@@ -162,8 +166,7 @@ async function fetchExams() {
     exams.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError(`Eroare la preluarea examenelor: ${errorMessage}`);
-  }
+    showError('Eroare la preluarea examenelor: ' + errorMessage);  }
 }
 
 async function fetchExamRequests() {
@@ -172,7 +175,7 @@ async function fetchExamRequests() {
     examRequestsPending.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError(`Eroare la preluarea cererilor de examen: ${errorMessage}`);
+    showError('Eroare la preluarea cererilor de examen: ', errorMessage);
   }
 }
 
@@ -182,7 +185,7 @@ async function fetchExamRequestsRejected() {
     examRequestsRejected.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError(`Eroare la preluarea cererilor respinse: ${errorMessage}`);
+    showError('Eroare la preluarea cererilor respinse: ', error);
   }
 }
 
@@ -195,31 +198,26 @@ async function fetchMaterials() {
     }));
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError(`Eroare la preluarea materiilor: ${errorMessage}`);
+    showError('Eroare la preluarea materiilor: ', errorMessage);
   }
 }
 
 function getErrorMessage(error) {
-  if (error.response && error.response.data) {
-    // Handle structured error response
-    if (error.response.data.message) {
-      return error.response.data.message;
-    }
-    // Handle validation errors array
-    if (Array.isArray(error.response.data.errors)) {
-      return error.response.data.errors.join(', ');
-    }
-    // Handle simple error message
-    if (typeof error.response.data === 'string') {
-      return error.response.data;
-    }
-    return `Eroare de server (${error.response.status})`;
+  if (error.response) {
+    return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
   } else if (error.request) {
-    return 'Nu s-a putut stabili conexiunea cu serverul. Verificați conexiunea la internet.';
+    return 'Eroare de rețea: Nu am putut să te conectăm la server.';
   } else {
-    return `${error.message}`;
+    return ` ${error.message}`;
   }
 }
+
+const handleRequestAdded = () => {
+  // Refresh the grid data
+  if (activeComponent.value === 'examScheduling') {
+    fetchExamRequests();
+  }
+};
 
 </script>
 

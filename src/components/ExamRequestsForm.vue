@@ -95,16 +95,25 @@ export default {
 
       try {
         const response = await api.post('/Requests/Post', requestData);
-        this.$emit('request-submitted', response.data);
+        this.$emit('request-added');
+        
+        this.material = "";
+        this.date = "";
       } catch (error) {
-        this.errorMessage = error.message;
+        const errorMessage = this.getErrorMessage(error);
+        this.showError("A apărut o eroare la adăugarea examenului: " + errorMessage);
       }
-
-      this.material = "";
-      this.date = "";
     },
 
-    
+    getErrorMessage(error) {
+      if (error.response) {
+        return error.response.data.message || error.response.statusText;
+      } else if (error.request) {
+        return 'Eroare de rețea: Nu am putut să te conectăm la server.';
+      } else {
+        return `Eroare necunoscută: ${error.message}`;
+      }
+    },
   },
 };
 </script>

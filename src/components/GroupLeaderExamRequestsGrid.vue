@@ -12,7 +12,6 @@
           </tr>
         </thead>
         <tbody v-if="exams.length > 0">
-          <!-- Dynamically populated rows from the exams list -->
           <tr v-for="exam in exams" :key="exam.id">
             <td>{{ exam.subjectName }}</td>
             <td>{{ exam.professorName }}</td>
@@ -30,10 +29,14 @@
 
 <script>
 export default {
-  name: 'ExamsGrid',
+  name: 'GroupLeaderExamRequestsGrid',
   props: {
-    exams: Array,
-  },
+    exams: {
+      type: Array,
+      required: true,
+      default: () => []
+    }
+  }
 };
 </script>
 
