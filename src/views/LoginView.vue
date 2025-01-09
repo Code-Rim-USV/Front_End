@@ -47,6 +47,16 @@ export default {
   },
   methods: {
     async handleLogin() {
+      // Validate that both email and password are provided
+      if (!this.email.trim()) {
+        this.showError('Vă rugăm să introduceți un email.');
+        return;
+      }
+      if (!this.password.trim()) {
+        this.showError('Vă rugăm să introduceți o parolă.');
+        return;
+      }
+
       try {
         const response = await api.put('/auth', {
           email: this.email,

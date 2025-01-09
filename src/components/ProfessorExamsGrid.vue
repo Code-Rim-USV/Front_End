@@ -1,6 +1,10 @@
 <template>
   <div class="professor-exams-grid">
-    <h2>Examene</h2>
+    <h2>Examene <span class="last-updated">(Ultima actualizare: {{ lastUpdated }})</span></h2>
+    <button @click="exportToCSV" class="export-btn">
+      <span class="material-icons">download</span>
+      Export CSV
+    </button>
     <div class="table-container">
       <table>
         <thead>
@@ -25,7 +29,7 @@
             <td>{{ exam.start_Time }}</td>
             <td>{{ exam.duration }}{{ exam.duration > 1 ? ' ore' : ' oră' }}</td>
             <td>
-              <button @click="$emit('edit', exam)" class="edit-btn">
+              <button @click="$emit('edit', exam.examID)" class="edit-btn">
                 <span class="material-icons">edit</span>
               </button>
             </td>
@@ -43,7 +47,47 @@ export default {
   props: {
     exams: Array,
   },
-  emits: ['edit'],  
+  emits: ['edit'],
+  data() {
+    return {
+      lastUpdated: new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' ,second: '2-digit'}),
+    };
+  },
+  methods: {
+    exportToCSV() {
+      const headers = ['Materia', 'Grupa', 'Asistent', 'Sala', 'Data', 'Ora', 'Durata'];
+      
+      const csvData = this.exams.map(exam => [
+        exam.subjectName,
+        exam.group,
+        exam.assistantName,
+        exam.location,
+        exam.date,
+        exam.start_Time,
+        `${exam.duration}${exam.duration > 1 ? ' ore' : ' oră'}`,
+      ]);
+      
+      csvData.unshift(headers);
+      
+      const csvString = csvData.map(row => row.join(',')).join('\n');
+      
+      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `examene_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  },
+  watch: {
+    exams() {
+      this.lastUpdated = new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' ,second: '2-digit'});
+    },
+  },
 };
 </script>
 
@@ -60,10 +104,35 @@ export default {
   height: 40%;
 }
 
+.export-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.export-btn:hover {
+  background-color: #45a049;
+}
+
 h2 {
   font-size: 1.5em;
   margin-bottom: 10px;
   color: black;
+}
+
+.last-updated {
+  font-size: 0.8em;
+  color: #666;
 }
 
 p {

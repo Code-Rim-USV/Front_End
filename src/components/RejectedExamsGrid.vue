@@ -1,6 +1,6 @@
 <template>
   <div class="rejected-exams-grid">
-    <h2>Examene Respinse</h2>
+    <h2>Examene Respinse <span class="last-updated">(Ultima actualizare: {{ lastUpdated }})</span></h2>
     <div class="table-container">
       <table>
         <thead>
@@ -31,9 +31,19 @@
 
 <script>
 export default {
-  name: 'ExamsGrid',
+  name: 'RejectedExamsGrid',
   props: {
     rejectedExams: Array,
+  },
+  data() {
+    return {
+      lastUpdated: new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' ,second: '2-digit'}),
+    };
+  },
+  watch: {
+    rejectedExams() {
+      this.lastUpdated = new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' ,second: '2-digit'});
+    },
   },
 };
 </script>
@@ -54,6 +64,11 @@ h2 {
   font-size: 1.5em;
   margin-bottom: 10px;
   color: black;
+}
+
+.last-updated {
+  font-size: 0.8em;
+  color: #666;
 }
 
 p {

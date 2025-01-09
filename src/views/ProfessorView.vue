@@ -7,28 +7,20 @@
 
       <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
 
-        <Calendar :exam-dates="examRequestsPending" v-if="activeComponent === 'applications'"/>
-        <ExamRequestsGrid :requests="requests" @accept="openAcceptDialog"
-        @reject="openRejectDialog" v-if="activeComponent === 'applications'"/>
+      <Calendar :exam-dates="examRequestsPending" v-if="activeComponent === 'applications'" />
+      <ExamRequestsGrid :requests="requests" @accept="openAcceptDialog" @reject="openRejectDialog"
+        v-if="activeComponent === 'applications'" />
 
-      
-        
-      <ExamEditDialog v-if="showEditDialog" :examID="selectedExam.examID" :examData="selectedExam"
-        :assistant-options="assistants" :room-options="rooms" @close="closeDialogs" />
+      <ExamEditDialog v-if="showEditDialog" :exam-id="selectedExam" :assistant-options="assistants"
+        :room-options="rooms" @close="closeDialogs" />
 
       <AcceptedRequestDialogue v-if="showAcceptDialog" :requestID="selectedRequestID" @close="closeDialogs"
         :assistant-options="assistants" :room-options="rooms" />
       <RejectedRequestDialogue v-if="showRejectDialog" :requestID="selectedRequestID" @close="closeDialogs" />
 
       <!-- Component Settings Page -->
-      <ComponentSettings
-        v-if="activeComponent === 'settings'"
-        :username="user.username"
-        :role="user.role"
-        :email="user.email"
-        :originalPassword="user.originalPassword"
-        @saveSettings="saveUserSettings"
-      />
+      <ComponentSettings v-if="activeComponent === 'settings'" :username="user.username" :role="user.role"
+        :email="user.email" :originalPassword="user.originalPassword" @saveSettings="saveUserSettings" />
 
       <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
@@ -77,7 +69,7 @@ const user = ref({
   role: '',
   email: '',
   password: '',
-  originalPassword: '', 
+  originalPassword: '',
 });
 
 async function fetchUserData() {
@@ -88,7 +80,7 @@ async function fetchUserData() {
       username: response.data.userName,
       role: response2.data.role,
       email: response.data.email,
-      originalPassword: '', 
+      originalPassword: '',
     };
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -99,7 +91,7 @@ async function fetchUserData() {
 async function saveUserSettings(updatedUser) {
   try {
     const payload = {
-      UserID: userId.value, 
+      UserID: userId.value,
       Password: updatedUser.password,
     };
 
@@ -152,7 +144,7 @@ function startPolling() {
       fetchRequests();
       fetchExams();
     }
-  }, 180000);
+  }, 120000);
 }
 
 function stopPolling() {
@@ -166,8 +158,8 @@ watch(activeComponent, () => {
   startPolling();
 });
 
-function openEditDialog(exam) {
-  selectedExam.value = exam;
+function openEditDialog(examId) {
+  selectedExam.value = examId;
   showEditDialog.value = true;
 }
 
@@ -270,7 +262,7 @@ function getErrorMessage(error) {
   height: 100%;
 }
 
-.professor-view > *:not(.dialogue-overlay):not(.error-overlay) { 
+.professor-view>*:not(.dialogue-overlay):not(.error-overlay) {
   flex: 1 1 auto;
   width: 100%;
   max-height: 100vh;
