@@ -10,8 +10,13 @@
       <ExamRequestsForm 
         v-if="activeComponent === 'examScheduling'" 
         :materials="materials" 
+        @request-added="handleRequestAdded"
       />
-      <GroupLeaderExamRequestsGrid :exams="examRequestsPending" v-if="activeComponent === 'examScheduling'" />
+      <GroupLeaderExamRequestsGrid 
+        ref="examRequestsGrid"
+        :exams="examRequestsPending"
+        v-if="activeComponent === 'examScheduling'" 
+      />
 
       <!-- Rejected Exam grid -->
       <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
@@ -206,6 +211,13 @@ function getErrorMessage(error) {
     return ` ${error.message}`;
   }
 }
+
+const handleRequestAdded = () => {
+  // Refresh the grid data
+  if (activeComponent.value === 'examScheduling') {
+    fetchExamRequests();
+  }
+};
 
 </script>
 

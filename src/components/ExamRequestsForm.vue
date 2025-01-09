@@ -95,14 +95,14 @@ export default {
 
       try {
         const response = await api.post('/Requests/Post', requestData);
-
+        this.$emit('request-added');
+        
+        this.material = "";
+        this.date = "";
       } catch (error) {
         const errorMessage = this.getErrorMessage(error);
         this.showError("A apărut o eroare la adăugarea examenului: " + errorMessage);
       }
-
-      this.material = "";
-      this.date = "";
     },
 
     getErrorMessage(error) {

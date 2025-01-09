@@ -53,8 +53,10 @@ export default {
           password: this.password,
         });
 
-        const { userId, roles } = response.data;
-
+        const { userId, roles, token } = response.data;
+        
+        // Store the JWT token
+        localStorage.setItem('jwt_token', token);
         localStorage.setItem('user', JSON.stringify({ userId, roles }));
 
         if (roles.includes('Student')) {
