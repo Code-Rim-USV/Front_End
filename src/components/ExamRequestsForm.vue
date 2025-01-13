@@ -101,7 +101,7 @@ export default {
         this.date = "";
       } catch (error) {
         const errorMessage = this.getErrorMessage(error);
-        this.showError("A apărut o eroare la adăugarea examenului: " + errorMessage);
+        this.showError(errorMessage);
       }
     },
 
@@ -111,7 +111,7 @@ export default {
       } else if (error.request) {
         return 'Eroare de rețea: Nu am putut să te conectăm la server.';
       } else {
-        return `Eroare necunoscută: ${error.message}`;
+        return `${error.message}`;
       }
     },
   },
