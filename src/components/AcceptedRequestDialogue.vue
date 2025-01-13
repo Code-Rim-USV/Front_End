@@ -169,7 +169,7 @@ export default {
         } else if (error.response.statusText) {
           return error.response.statusText;
         } else {
-          return `Eroare de server`;
+          return `Eroare necunoscută`;
         }
       } else if (error.request) {
         // Request was made but no response was received

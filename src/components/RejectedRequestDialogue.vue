@@ -82,7 +82,7 @@ export default {
         } else if (error.response.statusText) {
           return error.response.statusText;
         } else {
-          return `Eroare de server: Cod ${error.response.status}`;
+          return "Eroare necunoscută";
         }
       } else if (error.request) {
         // Request was made but no response was received
