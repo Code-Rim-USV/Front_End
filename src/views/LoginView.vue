@@ -6,7 +6,7 @@
           <h2>Bun venit la FIESC ePanel</h2>
           <form @submit.prevent="handleLogin">
             <BaseInput label="Email" type="email" placeholder="prenume.nume@student.usv.ro" v-model="email" />
-            <BaseInput label="Parola" type="password" placeholder="Enter your password" v-model="password" :show-toggle="true" />
+            <BaseInput label="Parola" type="password" placeholder="Introduceti parola" v-model="password" :show-toggle="true" />
             <button type="submit" class="login-button">Autentificare</button>
           </form>
         </div>

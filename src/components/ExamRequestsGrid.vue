@@ -17,7 +17,7 @@
             <td>{{ request.subjectName }}</td>
             <td>{{ request.group }}</td>
             <td>{{ request.date }}</td>
-            <td>{{ request.status }}</td>
+            <td>In asteptare</td>
             <td>
               <button @click="$emit('accept', request.requestID)" class="accept-btn">Acceptă</button>
               <button @click="$emit('reject', request.requestID)" class="reject-btn">Respingere</button>
