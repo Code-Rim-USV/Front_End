@@ -146,7 +146,7 @@ function startPolling() {
     }else if(activeComponent.value ==='rejectSchedules'){
       fetchExamRequestsRejected();
     }
-  }, 500); 
+  }, 120000); 
 }
 
 function stopPolling() {
