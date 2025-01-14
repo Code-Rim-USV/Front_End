@@ -101,7 +101,7 @@ export default {
       return new Date(this.currentYear, this.currentMonth).toLocaleString(
         "RO",
         { month: "long", year: "numeric" }
-      );
+      ).replace(/^\w/, (c) => c.toUpperCase());
     },
     nextMonthTitle() {
       const nextMonth = this.currentMonth + 1;
@@ -109,7 +109,7 @@ export default {
       return new Date(nextYear, nextMonth % 12).toLocaleString("RO", {
         month: "long",
         year: "numeric",
-      });
+      }).replace(/^\w/, (c) => c.toUpperCase());
     },
     firstMonthWeeks() {
       return this.generateCalendarWeeks(this.currentYear, this.currentMonth);
@@ -207,6 +207,12 @@ export default {
 
 .calendar-title {
   font-size: 1.2em;
+  font-weight: 700;
+}
+
+.calendar-title h2 {
+  margin: 0;
+  font-weight: 700;
 }
 
 .calendar-nav {

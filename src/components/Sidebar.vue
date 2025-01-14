@@ -3,7 +3,7 @@
     <div class="logo">
       <img src="../assets/LogoUSV.png" alt="USV Logo" />
       <span>
-        <h2>USV FIESC</h2>
+        <h3>USV FIESC</h3>
       </span>
     </div>
     <nav>
