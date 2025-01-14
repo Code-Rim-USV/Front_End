@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <GroupLeaderSidebar @changeComponent="setActiveComponent" />
+    <Sidebar :userRole="'groupLeader'" @changeComponent="setActiveComponent" />
     <div class="student-view">
       <!-- Calendar component -->
       <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
@@ -52,7 +52,7 @@ import Calendar from '@/components/Calendar.vue';
 import ExamsGrid from '@/components/ExamsGrid.vue';
 import GroupLeaderExamRequestsGrid from '@/components/GroupLeaderExamRequestsGrid.vue';
 import RejectedExamsGrid from '@/components/RejectedExamsGrid.vue';
-import GroupLeaderSidebar from '@/components/GroupLeaderSidebar.vue';
+import Sidebar from '@/components/Sidebar.vue';
 import ComponentSettings from '@/components/ComponentSettings.vue';
 import ExamRequestsForm from '@/components/ExamRequestsForm.vue';
 import api from '@/services/api';

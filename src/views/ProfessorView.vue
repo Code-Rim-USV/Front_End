@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <ProfessorSidebar @changeComponent="setActiveComponent" />
+    <Sidebar :userRole="'professor'" @changeComponent="setActiveComponent" />
     <div class="professor-view">
       <!-- Calendar component -->
       <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
@@ -42,7 +42,7 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import Calendar from '@/components/Calendar.vue';
 import ProfessorExamGrid from '@/components/ProfessorExamsGrid.vue';
-import ProfessorSidebar from '@/components/ProfessorSidebar.vue';
+import Sidebar from '@/components/Sidebar.vue';
 import ExamRequestsGrid from '@/components/ExamRequestsGrid.vue';
 import ExamEditDialog from '@/components/ExamEditDialog.vue';
 import AcceptedRequestDialogue from '@/components/AcceptedRequestDialogue.vue';

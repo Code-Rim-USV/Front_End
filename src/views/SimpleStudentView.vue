@@ -1,7 +1,7 @@
 <template>
     <div class="layout">
       <!-- Sidebar -->
-      <StudentSidebar @changeComponent="setActiveComponent" />
+      <Sidebar :userRole="'student'" @changeComponent="setActiveComponent" />
     
       <!-- Main content area -->
       <div class="student-view">
@@ -37,7 +37,7 @@
   import Calendar from '@/components/Calendar.vue';
   import ExamsGrid from '@/components/ExamsGrid.vue';
   import ComponentSettings from '@/components/ComponentSettings.vue'
-  import StudentSidebar from '@/components/StudentSidebar.vue';
+  import Sidebar from '@/components/Sidebar.vue';
   import { useRouter } from 'vue-router';
   
   const activeComponent = ref('calendar');

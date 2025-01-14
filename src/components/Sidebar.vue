@@ -8,18 +8,33 @@
     </div>
     <nav>
       <ul>
+        <!-- Common menu item for all roles -->
         <li :class="{ active: activeItem === 'calendar' }" @click="setActive('calendar')">
           <span class="material-icons">calendar_today</span>
           <span>Calendar</span>
         </li>
-        <li :class="{ active: activeItem === 'examScheduling' }" @click="setActive('examScheduling')">
+
+        <!-- Professor specific menu items -->
+        <li v-if="userRole === 'professor'" 
+            :class="{ active: activeItem === 'applications' }" 
+            @click="setActive('applications')">
           <span class="material-icons">schedule</span>
-          <span>Programarea Examenelor</span>
+          <span>Cereri</span>
         </li>
-        <li :class="{ active: activeItem === 'rejectSchedules' }" @click="setActive('rejectSchedules')">
-          <span class="material-icons">cancel</span>
-          <span>Programări Respinse</span>
-        </li>
+
+        <!-- Group Leader specific menu items -->
+        <template v-if="userRole === 'groupLeader'">
+          <li :class="{ active: activeItem === 'examScheduling' }" 
+              @click="setActive('examScheduling')">
+            <span class="material-icons">schedule</span>
+            <span>Programarea Examenelor</span>
+          </li>
+          <li :class="{ active: activeItem === 'rejectSchedules' }" 
+              @click="setActive('rejectSchedules')">
+            <span class="material-icons">cancel</span>
+            <span>Programări Respinse</span>
+          </li>
+        </template>
       </ul>
     </nav>
     <div class="actions">
@@ -37,7 +52,16 @@
 
 <script>
 export default {
-  name: "GroupLeaderSidebarComponent",
+  name: "SidebarComponent",
+  props: {
+    userRole: {
+      type: String,
+      required: true,
+      validator: function(value) {
+        return ['student', 'professor', 'groupLeader'].includes(value)
+      }
+    }
+  },
   data() {
     return {
       activeItem: "calendar",
@@ -46,16 +70,15 @@ export default {
   methods: {
     setActive(tab) {
       this.activeItem = tab;
-      this.$emit("changeComponent", tab);
+      this.$emit('changeComponent', tab);
     },
     logout() {
-      localStorage.removeItem("user");
-      this.$router.push({ name: "LoginView" });
+      localStorage.removeItem('user');
+      this.$router.push({ name: 'LoginView' });
     },
   },
 };
 </script>
-
 
 <style scoped>
 .sidebar {
@@ -91,8 +114,8 @@ export default {
   width: 100%;
 }
 
- .settings,
- .logout {
+.settings,
+.logout {
   display: flex;
   align-items: center;
   padding: 10px;
@@ -100,7 +123,7 @@ export default {
   cursor: pointer;
   transition: background-color 0.2s;
   width: 100%;
- }
+}
 
 .settings:hover,
 .logout:hover {
@@ -142,4 +165,4 @@ nav ul li:hover {
 nav ul li .material-icons {
   margin-right: 10px;
 }
-</style>
+</style> 
