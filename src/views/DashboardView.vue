@@ -4,22 +4,35 @@
     <div class="dashboard-view">
       <!-- Common Components -->
       <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
-      <ExamsGrid :exams="exams" v-if="activeComponent === 'calendar' && (user.role === 'Student' || user.role === 'GroupLeader')" />
+      <DataGrid
+        v-if="activeComponent === 'calendar' && (user.role === 'Student' || user.role === 'GroupLeader')"
+        title="Examene"
+        :data="exams"
+        :headers="examHeaders"
+        :showExport="true"
+      />
       
       <!-- Professor Specific Components -->
       <template v-if="user.role === 'Professor'">
-        <!-- Professor Exam Grid component for calendar view -->
-        <ProfessorExamGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" />
-        <!-- Calendar component for applications view -->
-        <Calendar :exam-dates="examRequestsPending" v-if="activeComponent === 'applications'" />
-        <!-- Exam Requests Grid component for applications view -->
-        <ExamRequestsGrid 
-          :requests="requests" 
-          @accept="openAcceptDialog" 
-          @reject="openRejectDialog"
-          v-if="activeComponent === 'applications'" 
+        <DataGrid
+          v-if="activeComponent === 'calendar'"
+          title="Examene"
+          :data="exams"
+          :headers="professorExamHeaders"
+          :actions="['edit']"
+          :showExport="true"
+          @edit="openEditDialog"
         />
-        <!-- Exam Edit Dialog component -->
+        <Calendar :exam-dates="examRequestsPending" v-if="activeComponent === 'applications'" />
+        <DataGrid
+          v-if="activeComponent === 'applications'"
+          title="Solicitări Examene"
+          :data="requests"
+          :headers="requestHeaders"
+          :actions="['accept-reject']"
+          @accept="openAcceptDialog"
+          @reject="openRejectDialog"
+        />
         <ExamEditDialog 
           v-if="showEditDialog" 
           :exam-id="selectedExam" 
@@ -27,7 +40,6 @@
           :room-options="rooms" 
           @close="closeDialogs" 
         />
-        <!-- Accepted Request Dialogue component -->
         <AcceptedRequestDialogue 
           v-if="showAcceptDialog" 
           :requestID="selectedRequestID" 
@@ -35,7 +47,6 @@
           :assistant-options="assistants" 
           :room-options="rooms" 
         />
-        <!-- Rejected Request Dialogue component -->
         <RejectedRequestDialogue 
           v-if="showRejectDialog" 
           :requestID="selectedRequestID" 
@@ -45,24 +56,22 @@
 
       <!-- Group Leader Specific Components -->
       <template v-if="user.role === 'GroupLeader'">
-
-        <!--GroupLeaderExamRequestsGrid :exams="exams" v-if="activeComponent === 'calendar'" @edit="openEditDialog" /-->
-        <!-- Exam Requests Form component for examScheduling view -->
         <ExamRequestsForm 
           v-if="activeComponent === 'examScheduling'" 
           :materials="materials" 
           @request-added="handleRequestAdded"
         />
-        <!-- Group Leader Exam Requests Grid component for examScheduling view -->
-        <GroupLeaderExamRequestsGrid 
-          ref="examRequestsGrid"
-          :exams="examRequestsPending"
-          v-if="activeComponent === 'examScheduling'" 
+        <DataGrid
+          v-if="activeComponent === 'examScheduling'"
+          title="Cereri in procesare"
+          :data="examRequestsPending"
+          :headers="groupLeaderRequestHeaders"
         />
-        <!-- Rejected Exams Grid component for rejectSchedules view -->
-        <RejectedExamsGrid 
-          :rejectedExams="examRequestsRejected" 
-          v-if="activeComponent === 'rejectSchedules'" 
+        <DataGrid
+          v-if="activeComponent === 'rejectSchedules'"
+          title="Examene Respinse"
+          :data="examRequestsRejected"
+          :headers="rejectedExamHeaders"
         />
       </template>
 
@@ -97,17 +106,13 @@ import api from '@/services/api';
 
 // Components
 import Calendar from '@/components/Calendar.vue';
-import ExamsGrid from '@/components/ExamsGrid.vue';
-import ProfessorExamGrid from '@/components/ProfessorExamsGrid.vue';
-import ExamRequestsGrid from '@/components/ExamRequestsGrid.vue';
 import ExamEditDialog from '@/components/ExamEditDialog.vue';
 import AcceptedRequestDialogue from '@/components/AcceptedRequestDialogue.vue';
 import RejectedRequestDialogue from '@/components/RejectedRequestDialogue.vue';
-import GroupLeaderExamRequestsGrid from '@/components/GroupLeaderExamRequestsGrid.vue';
-import RejectedExamsGrid from '@/components/RejectedExamsGrid.vue';
 import ExamRequestsForm from '@/components/ExamRequestsForm.vue';
 import ComponentSettings from '@/components/ComponentSettings.vue';
 import Sidebar from '@/components/Sidebar.vue';
+import DataGrid from '@/components/DataGrid.vue';
 
 // Router
 const router = useRouter();
@@ -142,8 +147,48 @@ const examRequestsPending = ref([]);
 const examRequestsRejected = ref([]);
 const materials = ref([]);
 
-// Polling
-let pollingInterval = null;
+// Grid Headers
+const examHeaders = [
+  { key: 'subjectName', label: 'Materia' },
+  { key: 'professorName', label: 'Profesor' },
+  { key: 'assistantName', label: 'Asistent' },
+  { key: 'location', label: 'Sala' },
+  { key: 'date', label: 'Data' },
+  { key: 'start_Time', label: 'Ora' },
+  { key: 'duration', label: 'Durata' }
+];
+
+const professorExamHeaders = [
+  { key: 'subjectName', label: 'Materia' },
+  { key: 'group', label: 'Grupa' },
+  { key: 'assistantName', label: 'Asistent' },
+  { key: 'location', label: 'Sala' },
+  { key: 'date', label: 'Data' },
+  { key: 'start_Time', label: 'Ora' },
+  { key: 'duration', label: 'Durata' }
+];
+
+const requestHeaders = [
+  { key: 'subjectName', label: 'Materia' },
+  { key: 'group', label: 'Grupa' },
+  { key: 'date', label: 'Data' },
+  { key: 'status', label: 'Stare' }
+];
+
+const groupLeaderRequestHeaders = [
+  { key: 'subjectName', label: 'Materia' },
+  { key: 'professorName', label: 'Profesor' },
+  { key: 'date', label: 'Data' },
+  { key: 'status', label: 'Status' }
+];
+
+const rejectedExamHeaders = [
+  { key: 'subjectName', label: 'Materia' },
+  { key: 'professorName', label: 'Profesor' },
+  { key: 'date', label: 'Data' },
+  { key: 'status', label: 'Status' },
+  { key: 'rejectionReason', label: 'Motivul Respingerii' }
+];
 
 // Common Methods
 function setActiveComponent(componentName) {
@@ -303,24 +348,23 @@ async function fetchMaterials() {
   }
 }
 
+// Polling
+let pollingInterval = null;
+
 // Polling Functions
 function startPolling() {
   stopPolling();
   pollingInterval = setInterval(() => {
     if (activeComponent.value === 'calendar') {
       fetchExams();
-      if (user.value.role === 'Professor') {
-        fetchRequests();
-      }
     } else if (activeComponent.value === 'applications' && user.value.role === 'Professor') {
       fetchRequests();
-      fetchExams();
     } else if (activeComponent.value === 'examScheduling' && user.value.role === 'GroupLeader') {
       fetchExamRequests();
     } else if (activeComponent.value === 'rejectSchedules' && user.value.role === 'GroupLeader') {
       fetchExamRequestsRejected();
     }
-  }, user.value.role === 'GroupLeader' ? 500 : 120000);
+  }, 120000); // 2 dakika
 }
 
 function stopPolling() {
