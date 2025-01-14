@@ -17,7 +17,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in data" :key="item.id || item.requestID || item.examID">
+          <tr v-for="item in data" :key="item.id || item.requestID || item.examID" style="color: #000;">
             <td v-for="header in headers" :key="header.key">
               <template v-if="header.key === 'status'">
                 <div :class="getStatusClass(item[header.key])">
@@ -31,7 +31,7 @@
                 {{ item[header.key] }}
               </template>
             </td>
-            <td v-if="actions && actions.length > 0" class="actions-cell">
+            <td v-if="actions && actions.length > 0" class="actions-cell" style="color: #000;">
               <template v-if="actions.includes('edit')">
                 <button @click="$emit('edit', item.examID)" class="action-btn edit-btn">
                   <span class="material-icons">edit</span>

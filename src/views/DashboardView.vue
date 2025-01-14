@@ -4,13 +4,17 @@
     <div class="dashboard-view">
       <!-- Common Components -->
       <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
-      <DataGrid
-        v-if="activeComponent === 'calendar' && (user.role === 'Student' || user.role === 'GroupLeader')"
-        title="Examene"
-        :data="exams"
-        :headers="examHeaders"
-        :showExport="true"
-      />
+      
+      <!-- Student and GroupLeader Specific Components -->
+      <template v-if="user.role === 'Student' || user.role === 'GroupLeader'">
+        <DataGrid
+          v-if="activeComponent === 'calendar'"
+          title="Examene"
+          :data="exams"
+          :headers="examHeaders"
+          :showExport="true"
+        />
+      </template>
       
       <!-- Professor Specific Components -->
       <template v-if="user.role === 'Professor'">
@@ -428,6 +432,7 @@ const handleRequestAdded = () => {
   flex-direction: row;
   background-color: #EAEAEA;
   overflow: hidden;
+  --color-text: #000000;
 }
 
 .dashboard-view {
@@ -521,5 +526,29 @@ const handleRequestAdded = () => {
 
 .error-ok-btn:hover {
   background-color: #f0f0f0;
+}
+
+.exam-grid {
+  color: #000000;
+  font-size: 14px;
+}
+
+.exam-grid :deep(th) {
+  color: #000000;
+  font-weight: 600;
+}
+
+.exam-grid :deep(td) {
+  color: #000000;
+}
+
+.no-data-message {
+  text-align: center;
+  color: var(--color-text);
+  font-size: 16px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 20px;
 }
 </style> 

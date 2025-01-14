@@ -1,16 +1,25 @@
 <template>
-  <div class="dialogue-overlay">
-    <div class="dialogue-container">
-        <h2>Editare examen</h2>
-      <div class="input-area">
-        <ExamRequestDropInput label="Asistenți" :options="assistantOptions" v-model="selectedAssistant"
-          placeholder="Selectați asistentul" />
+  <div class="dialog-overlay">
+    <div class="dialog-container">
+      <h2>Editare examen</h2>
+      <div class="form-group">
+        <ExamRequestDropInput
+          label="Asistenți"
+          :options="assistantOptions"
+          v-model="selectedAssistant"
+          placeholder="Selectați asistentul"
+        />
       </div>
-      <div class="input-area">
-        <ExamRequestDropInput label="Sala" :options="roomOptions" v-model="selectedRoom" placeholder="Selectați sala" />
+      <div class="form-group">
+        <ExamRequestDropInput
+          label="Sala"
+          :options="roomOptions"
+          v-model="selectedRoom"
+          placeholder="Selectați sala"
+        />
       </div>
-      <div class="input-area">
-        <label>Ora examenului</label>
+      <div class="form-group">
+        <label class="form-label">Ora examenului</label>
         <div class="time-picker">
           <select v-model="selectedTime.hours" class="time-select">
             <option v-for="hour in 12" :key="hour" :value="hour">
@@ -30,44 +39,48 @@
           </select>
         </div>
       </div>
-      <div class="input-area">
-        <label>Durata examenului</label>
+      <div class="form-group">
+        <label class="form-label">Durata examenului</label>
         <div class="duration-selector">
-          <button 
-            v-for="duration in examDurations" 
+          <button
+            v-for="duration in examDurations"
             :key="duration"
             :class="['duration-btn', { active: selectedDuration === duration }]"
-            @click="selectDuration(duration)">
-            {{ duration }} h
+            @click="selectDuration(duration)"
+          >
+            {{ duration }} ore
           </button>
         </div>
       </div>
-      <div class="dialogue-buttons">
-        <button class="confirm-btn" @click="updateExam">Salvează</button>
-        <button class="cancel-btn" @click="$emit('close')">Anulează</button>
+      <div class="dialog-actions">
+        <button class="btn btn-primary" @click="updateExam">Salvează</button>
+        <button class="btn btn-secondary" @click="$emit('close')">Anulează</button>
       </div>
     </div>
   </div>
 
-  <!-- Error overlay -->
-  <div v-if="errorMessage" class="error-overlay">
-    <div class="error-content">
-      <div class="error-header">
-        <div @click="errorMessage = null" class="error-close-btn">
+  <!-- Error Dialog -->
+  <div v-if="errorMessage" class="error-dialog-overlay">
+    <div class="error-dialog">
+      <div class="error-dialog__header">
+        <button @click="closeError" class="error-dialog__close">
           ✖
-        </div>
+        </button>
       </div>
-      <span class="error-message">{{ errorMessage }}</span>
-      <button @click="errorMessage = null" class="error-ok-btn">OK</button>
+      <p class="error-dialog__message">{{ errorMessage }}</p>
+      <button @click="closeError" class="btn btn-primary">OK</button>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import api from '@/services/api';
 import ExamRequestDropInput from './ExamRequestDropInput.vue';
 
+/**
+ * Dialog component for editing exam details
+ */
 export default {
   name: 'ExamEditDialog',
   components: {
@@ -102,6 +115,10 @@ export default {
     };
   },
   methods: {
+    closeError() {
+      this.errorMessage = null;
+    },
+
     showError(message) {
       this.errorMessage = message;
     },
@@ -111,76 +128,86 @@ export default {
     },
 
     async updateExam() {
-      // Validate that all required fields are selected
-      if (!this.selectedAssistant) {
-        this.showError('Vă rugăm să selectați un asistent.');
-        return;
-      }
-      if (!this.selectedRoom) {
-        this.showError('Vă rugăm să selectați o sală.');
-        return;
-      }
-      if (!this.selectedTime || !this.selectedTime.hours || !this.selectedTime.minutes) {
-        this.showError('Vă rugăm să selectați o oră pentru examen.');
-        return;
-      }
+      if (!this.validateForm()) return;
 
       try {
-        // Convert hours to 12-hour format
-        let hours = parseInt(this.selectedTime.hours);
-        if (!this.selectedTime.isAM && hours < 12) {
-          hours += 12;
-        } else if (this.selectedTime.isAM && hours === 12) {
-          hours = 0;
-        }
-        
-        // Format back to 12-hour for display
-        let displayHours = hours % 12;
-        displayHours = displayHours === 0 ? 12 : displayHours;
-        
-        const formattedTime = `${String(displayHours).padStart(2, '0')}:${this.selectedTime.minutes} ${this.selectedTime.isAM ? 'AM' : 'PM'}`;
-
-        const payload = {
-          ExamID: parseInt(this.examId),
-          AssistantID: parseInt(this.selectedAssistant),
-          Start_Time: formattedTime,
-          LocationID: parseInt(this.selectedRoom),
-          Duration: parseInt(this.selectedDuration)
-        };
-
-    
-        const response = await api.put(`/Exams/Put/${this.examId}`, payload);
-
-          this.$emit('close');
-          window.location.reload();
-        
+        const formattedTime = this.formatTime();
+        await this.submitExamUpdate(formattedTime);
+        this.handleSuccess();
       } catch (error) {
-        console.error('Error details:', error);
-        const errorMessage = this.getErrorMessage(error);
-        this.showError(errorMessage);
+        console.error('Eroare la actualizare:', error);
+        this.showError(this.getErrorMessage(error));
       }
     },
 
+    validateForm() {
+      if (!this.selectedAssistant) {
+        this.showError('Vă rugăm să selectați un asistent.');
+        return false;
+      }
+      if (!this.selectedRoom) {
+        this.showError('Vă rugăm să selectați o sală.');
+        return false;
+      }
+      if (!this.selectedTime || !this.selectedTime.hours || !this.selectedTime.minutes) {
+        this.showError('Vă rugăm să selectați ora examenului.');
+        return false;
+      }
+      return true;
+    },
+
+    formatTime() {
+      let hours = parseInt(this.selectedTime.hours);
+      if (!this.selectedTime.isAM && hours < 12) {
+        hours += 12;
+      } else if (this.selectedTime.isAM && hours === 12) {
+        hours = 0;
+      }
+      
+      let displayHours = hours % 12;
+      displayHours = displayHours === 0 ? 12 : displayHours;
+      
+      return `${String(displayHours).padStart(2, '0')}:${this.selectedTime.minutes} ${this.selectedTime.isAM ? 'AM' : 'PM'}`;
+    },
+
+    async submitExamUpdate(formattedTime) {
+      const payload = {
+        ExamID: parseInt(this.examId),
+        AssistantID: parseInt(this.selectedAssistant),
+        Start_Time: formattedTime,
+        LocationID: parseInt(this.selectedRoom),
+        Duration: parseInt(this.selectedDuration)
+      };
+
+      await api.put(`/Exams/Put/${this.examId}`, payload);
+    },
+
+    handleSuccess() {
+      this.$emit('close');
+      window.location.reload();
+    },
+
     getErrorMessage(error) {
+      if (error.response?.data?.message) {
+        return error.response.data.message;
+      }
+      if (error.response?.statusText) {
+        return error.response.statusText;
+      }
       if (error.response) {
-        if (error.response.data && error.response.data.message) {
-          return error.response.data.message;
-        } else if (error.response.statusText) {
-          return error.response.statusText;
-        } else {
-          return `Eroare de server: Cod ${error.response.status}`;
-        }
-      } else if (error.request) {
-        return 'Eroare de rețea: Nu am putut să te conectăm la server.';
-      } 
-      return `${error.message}`;
+        return `Eroare de server: ${error.response.status}`;
+      }
+      if (error.request) {
+        return 'Eroare de rețea: Nu s-a putut conecta la server.';
+      }
+      return error.message || 'A apărut o eroare necunoscută.';
     },
   }
 };
 </script>
 
 <style scoped>
-.dialogue-overlay {
+.dialog-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -193,7 +220,7 @@ export default {
   z-index: 1000;
 }
 
-.dialogue-container {
+.dialog-container {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -208,11 +235,11 @@ h2 {
   margin-bottom: 20px;
 }
 
-.input-area {
+.form-group {
   margin: 15px 0;
 }
 
-.dialogue-buttons {
+.dialog-actions {
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -227,30 +254,30 @@ button {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.confirm-btn {
+.btn-primary {
   background: black;
   color: white;
 }
 
-.confirm-btn:hover {
+.btn-primary:hover {
   background: white;
   color: black;
   border: 1px solid black;
 }
 
-.cancel-btn {
+.btn-secondary {
   background: white;
   color: black;
   border: 1px solid black;
 }
 
-.cancel-btn:hover {
+.btn-secondary:hover {
   background: black;
   color: white;
 }
 
-/* Error overlay styles */
-.error-overlay {
+/* Error Dialog styles */
+.error-dialog-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -263,7 +290,7 @@ button {
   z-index: 9999;
 }
 
-.error-content {
+.error-dialog {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -275,13 +302,13 @@ button {
   align-items: center;
 }
 
-.error-header {
+.error-dialog__header {
   position: relative;
   width: 100%;
   margin-top: 30px; 
 }
 
-.error-close-btn {
+.error-dialog__close {
   position: absolute;
   top: -40px; 
   left: 50%;
@@ -299,14 +326,14 @@ button {
   cursor: pointer;
 }
 
-.error-message {
+.error-dialog__message {
   font-size: 16px;
   color: red;
   margin-bottom: 20px;
   flex-grow: 1;
 }
 
-.error-ok-btn {
+.btn-primary {
   background-color: transparent;
   color: grey;
   border: 2px solid grey;
@@ -317,7 +344,7 @@ button {
   width: 100%;
 }
 
-.error-ok-btn:hover {
+.btn-primary:hover {
   background-color: #f0f0f0;
 }
 
@@ -353,7 +380,7 @@ button {
   background: #333;
 }
 
-label {
+.form-label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
