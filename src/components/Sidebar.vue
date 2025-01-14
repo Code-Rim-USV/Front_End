@@ -15,7 +15,7 @@
         </li>
 
         <!-- Professor specific menu items -->
-        <li v-if="userRole === 'professor'" 
+        <li v-if="userRole === 'Professor'" 
             :class="{ active: activeItem === 'applications' }" 
             @click="setActive('applications')">
           <span class="material-icons">schedule</span>
@@ -23,7 +23,7 @@
         </li>
 
         <!-- Group Leader specific menu items -->
-        <template v-if="userRole === 'groupLeader'">
+        <template v-if="userRole === 'GroupLeader'">
           <li :class="{ active: activeItem === 'examScheduling' }" 
               @click="setActive('examScheduling')">
             <span class="material-icons">schedule</span>
@@ -58,7 +58,7 @@ export default {
       type: String,
       required: true,
       validator: function(value) {
-        return ['student', 'professor', 'groupLeader'].includes(value)
+        return ['Student', 'Professor', 'GroupLeader'].includes(value)
       }
     }
   },

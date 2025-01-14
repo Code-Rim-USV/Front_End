@@ -5,9 +5,24 @@
         <div class="login-card">
           <h2>Bun venit la FIESC ePanel</h2>
           <form @submit.prevent="handleLogin">
-            <BaseInput label="Email" type="email" placeholder="prenume.nume@student.usv.ro" v-model="email" />
-            <BaseInput label="Parola" type="password" placeholder="Enter your password" v-model="password" :show-toggle="true" />
-            <button type="submit" class="login-button">Autentificare</button>
+            <BaseInput 
+              label="Email" 
+              type="email" 
+              placeholder="prenume.nume@student.usv.ro" 
+              v-model="email" 
+              :error="emailError"
+            />
+            <BaseInput 
+              label="Parola" 
+              type="password" 
+              placeholder="Introduceți parola" 
+              v-model="password" 
+              :show-toggle="true"
+              :error="passwordError"
+            />
+            <button type="submit" class="login-button" :disabled="isLoading">
+              {{ isLoading ? 'Se încarcă...' : 'Autentificare' }}
+            </button>
           </form>
         </div>
       </div>
@@ -17,81 +32,92 @@
     <div v-if="errorMessage" class="error-overlay">
       <div class="error-content">
         <div class="error-header">
-          <div @click="errorMessage = null" class="error-close-btn">
-            ✖
-          </div>
+          <div @click="clearError" class="error-close-btn">✖</div>
         </div>
         <span class="error-message">{{ errorMessage }}</span>
-        <button @click="errorMessage = null" class="error-ok-btn">OK</button>
+        <button @click="clearError" class="error-ok-btn">OK</button>
       </div>
     </div>
   </div>
 </template>
 
-
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import BaseInput from '@/components/BaseInput.vue';
 import api from '@/services/api';
 
-export default {
-  name: 'LoginView',
-  components: {
-    BaseInput,
-  },
-  data() {
-    return {
-      email: '',
-      password: '',
-      errorMessage: null, // Add errorMessage to control the overlay visibility
-    };
-  },
-  methods: {
-    async handleLogin() {
-      // Validate that both email and password are provided
-      if (!this.email.trim()) {
-        this.showError('Vă rugăm să introduceți un email.');
-        return;
-      }
-      if (!this.password.trim()) {
-        this.showError('Vă rugăm să introduceți o parolă.');
-        return;
-      }
+const router = useRouter();
+const email = ref('');
+const password = ref('');
+const errorMessage = ref(null);
+const isLoading = ref(false);
+const emailError = ref('');
+const passwordError = ref('');
 
-      try {
-        const response = await api.put('/auth', {
-          email: this.email,
-          password: this.password,
-        });
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
 
-        const { userId, roles, token } = response.data;
-        
-        // Store the JWT token
-        localStorage.setItem('jwt_token', token);
-        localStorage.setItem('user', JSON.stringify({ userId, roles }));
+function clearError() {
+  errorMessage.value = null;
+  emailError.value = '';
+  passwordError.value = '';
+}
 
-        if (roles.includes('Student')) {
-          this.$router.push({ name: 'SimpleStudentView' });
-        } else if (roles.includes('GroupLeader')) {
-          this.$router.push({ name: 'GroupLeaderView' });
-        } else if (roles.includes('Professor')) {
-          this.$router.push({ name: 'ProfessorView' });
-        } else {
-          this.showError('Rolul nu a fost identificat.');
-        }
-      } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Autentificarea a eșuat. Vă rugam să încercați din nou.';
-        this.showError(errorMessage);
-      }
-    },
+function showError(message) {
+  errorMessage.value = message;
+}
 
-    // Show error message by setting it to the state
-    showError(message) {
-      this.errorMessage = message;
-    },
-  },
-};
+async function handleLogin() {
+  clearError();
+  
+  // Validate inputs
+  if (!email.value.trim()) {
+    emailError.value = 'Vă rugăm să introduceți un email.';
+    return;
+  }
+  if (!validateEmail(email.value)) {
+    emailError.value = 'Vă rugăm să introduceți un email valid.';
+    return;
+  }
+  if (!password.value.trim()) {
+    passwordError.value = 'Vă rugăm să introduceți o parolă.';
+    return;
+  }
+
+  isLoading.value = true;
+
+  try {
+    const response = await api.put('/auth', {
+      email: email.value,
+      password: password.value,
+    });
+
+    const { userId, roles, token } = response.data;
+    
+    // Store user data
+    localStorage.setItem('jwt_token', token);
+    localStorage.setItem('user', JSON.stringify({ userId, roles }));
+
+    // Redirect to dashboard
+    router.push({ name: 'DashboardView' });
+  } catch (error) {
+    let errorMsg = 'Autentificarea a eșuat. Vă rugăm să încercați din nou.';
+    
+    if (error.response?.status === 401) {
+      errorMsg = 'Email sau parolă incorectă.';
+    } else if (error.response?.data?.message) {
+      errorMsg = error.response.data.message;
+    }
+    
+    showError(errorMsg);
+  } finally {
+    isLoading.value = false;
+  }
+}
 </script>
-
 
 <style scoped>
 .login-container {
@@ -102,7 +128,7 @@ export default {
 }
 
 .background {
-  background: url('/src/assets/BackgroundLogin.jpg') center/cover no-repeat;
+  background: url('@/assets/BackgroundLogin.jpg') center/cover no-repeat;
   position: absolute;
   top: 0;
   left: 0;
@@ -139,15 +165,14 @@ export default {
 
 h2 {
   font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   color: black;
-  font-style: bold;
   font-weight: bold;
 }
 
 .login-button {
   width: 100%;
-  margin-top: 18px;
+  margin-top: 24px;
   padding: 16px;
   font-size: 1rem;
   color: white;
@@ -155,11 +180,17 @@ h2 {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
 }
 
-.login-button:hover {
+.login-button:hover:not(:disabled) {
   background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.login-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .error-overlay {
@@ -198,7 +229,7 @@ h2 {
   top: -40px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: red;
+  background-color: #dc3545;
   color: white;
   border: none;
   border-radius: 50%;
@@ -209,27 +240,34 @@ h2 {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.error-close-btn:hover {
+  background-color: #c82333;
 }
 
 .error-message {
   font-size: 16px;
-  color: red;
+  color: #dc3545;
   margin-bottom: 20px;
   flex-grow: 1;
 }
 
 .error-ok-btn {
   background-color: transparent;
-  color: grey;
-  border: 2px solid grey;
+  color: #6c757d;
+  border: 2px solid #6c757d;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 10px;
   cursor: pointer;
   width: 100%;
+  transition: all 0.3s ease;
 }
 
 .error-ok-btn:hover {
-  background-color: #f0f0f0;
+  background-color: #6c757d;
+  color: white;
 }
 </style>
