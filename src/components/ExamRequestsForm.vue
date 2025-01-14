@@ -5,7 +5,7 @@
       <div class="row">
         <ExamRequestDropInput 
           class="input-column" 
-          label="Select Material" 
+          label="Selectează materia" 
           :options="materials" 
           v-model="material"
           placeholder="Selectează materia" 
@@ -13,7 +13,7 @@
         
         <ExamRequestDateInput 
           class="input-column" 
-          label="Date" 
+          label="Selectează data" 
           v-model="date" 
           placeholder="Selectează data" 
         />
