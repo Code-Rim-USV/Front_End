@@ -18,52 +18,131 @@
       </div>
 
       <div class="input-group">
+        <label for="oldPassword" class="input-label">Parolă curentă</label>
+        <input
+          type="password"
+          id="oldPassword"
+          v-model="oldPassword"
+          class="input-field"
+          placeholder="Introduceți parola curentă"
+        />
+      </div>
+
+      <div class="input-group">
         <label for="newPassword" class="input-label">Parolă nouă</label>
         <input
           type="password"
           id="newPassword"
-          v-model="password"
+          v-model="newPassword"
           class="input-field"
-          placeholder="Introduceți parola"
+          placeholder="Introduceți parola nouă"
         />
       </div>
 
       <div class="save-button-container">
-        <button class="save-button" @click="saveSettings" :disabled="!isPasswordChanged">
+        <button class="save-button" @click="saveSettings" :disabled="!isPasswordValid">
           Salvează
         </button>
+      </div>
+    </div>
+
+    <!-- Error Overlay -->
+    <div v-if="errorMessage" class="error-overlay">
+      <div class="error-content">
+        <div class="error-header">
+          <div @click="errorMessage = null" class="error-close-btn">
+            ✖
+          </div>
+        </div>
+        <span class="error-message">{{ errorMessage }}</span>
+        <button @click="errorMessage = null" class="error-ok-btn">OK</button>
+      </div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div v-if="successMessage" class="success-overlay">
+      <div class="success-content">
+        <div class="success-header">
+          <div @click="successMessage = null" class="success-close-btn">
+            ✔
+          </div>
+        </div>
+        <span class="success-message">{{ successMessage }}</span>
+        <button @click="successMessage = null" class="success-ok-btn">OK</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import api from '@/services/api';
+
 export default {
   props: {
     username: String,
     role: String,
     email: String,
-    originalPassword: String,
+    userId: Number,
   },
-  emits: ['saveSettings'],
+  emits: ['passwordChanged'],
   data() {
     return {
-      password: '',
+      oldPassword: '',
+      newPassword: '',
+      errorMessage: null,
+      successMessage: null,
     };
   },
   computed: {
-    isPasswordChanged() {
-      return this.password !== this.originalPassword && this.password !== '';
+    isPasswordValid() {
+      return this.oldPassword !== '' && this.newPassword !== '' && this.oldPassword !== this.newPassword;
     },
   },
   methods: {
-    saveSettings() {
-      this.$emit('saveSettings', {
-        username: this.username,
-        role: this.role,
-        email: this.email,
-        password: this.password,
-      });
+    showError(message) {
+      this.errorMessage = message;
+    },
+
+    showSuccess(message) {
+      this.successMessage = message;
+    },
+
+    async saveSettings() {
+      try {
+        if (!this.isPasswordValid) {
+          this.showError('Vă rugăm completați ambele câmpuri cu parole diferite');
+          return;
+        }
+
+        const payload = {
+          UserID: this.userId,
+          oldPassword: this.oldPassword,
+          newPassword: this.newPassword,
+        };
+
+        await api.put(`/Users/PutPassword/${this.userId}`, payload);
+        
+        // Clear the password fields
+        this.oldPassword = '';
+        this.newPassword = '';
+        this.errorMessage = null;
+        
+        // Show success message
+        this.showSuccess('Parola a fost schimbată cu succes!');
+      } catch (error) {
+        const errorMessage = this.getErrorMessage(error);
+        this.showError(errorMessage);
+      }
+    },
+
+    getErrorMessage(error) {
+      if (error.response) {
+        return error.response.data.message || error.response.statusText;
+      } else if (error.request) {
+        return 'Eroare de rețea: Nu am putut să te conectăm la server.';
+      } else {
+        return `${error.message}`;
+      }
     },
   },
 };
@@ -213,6 +292,81 @@ h2 {
 }
 
 .error-ok-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.error-message-local {
+  display: none;
+}
+
+.success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.success-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.success-header {
+  position: relative;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.success-close-btn {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.success-message {
+  font-size: 16px;
+  color: #4CAF50;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.success-ok-btn {
+  background-color: transparent;
+  color: #4CAF50;
+  border: 2px solid #4CAF50;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.success-ok-btn:hover {
   background-color: #f0f0f0;
 }
 </style>

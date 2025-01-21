@@ -20,7 +20,7 @@
 
       <!-- Component Settings Page -->
       <ComponentSettings v-if="activeComponent === 'settings'" :username="user.username" :role="user.role"
-        :email="user.email" :originalPassword="user.originalPassword" @saveSettings="saveUserSettings" />
+      :email="user.email" :userId="userId" />
 
       <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
@@ -68,8 +68,6 @@ const user = ref({
   username: '',
   role: '',
   email: '',
-  password: '',
-  originalPassword: '',
 });
 
 async function fetchUserData() {
@@ -80,32 +78,12 @@ async function fetchUserData() {
       username: response.data.userName,
       role: response2.data.role,
       email: response.data.email,
-      originalPassword: '',
     };
   } catch (error) {
     const errorMessage = getErrorMessage(error);
     showError('Eroare la preluarea datelor utilizatorului: ' + errorMessage);
   }
 }
-
-async function saveUserSettings(updatedUser) {
-  try {
-    const payload = {
-      UserID: userId.value,
-      Password: updatedUser.password,
-    };
-
-    await api.put(`/Users/PutPassword/${userId.value}`, payload);
-
-    user.value.originalPassword = updatedUser.password;
-
-    showError('Parola a fost schimbată cu succes!');
-  } catch (error) {
-    const errorMessage = getErrorMessage(error);
-    showError('Eroare la schimbarea parolei: ' + errorMessage);
-  }
-}
-
 
 onMounted(() => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -228,7 +206,7 @@ async function fetchRooms() {
 
 function getErrorMessage(error) {
   if (error.response) {
-    return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
+    return error.response.data.message || error.response.statusText;
   } else if (error.request) {
     return 'Eroare de rețea: Nu am putut să te conectăm la server.';
   } else {
