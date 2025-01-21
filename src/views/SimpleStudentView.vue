@@ -1,59 +1,49 @@
 <template>
-    <div class="layout">
-      <!-- Sidebar -->
-      <StudentSidebar @changeComponent="setActiveComponent" />
-    
-      <!-- Main content area -->
-      <div class="student-view">
-        <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'"/>
-        <ExamsGrid :exams="exams" v-if="activeComponent === 'calendar'"/>
-        <ComponentSettings
-        v-if="activeComponent === 'settings'"
-        :username="user.username"
-        :role="user.role"
-        :email="user.email"
-        :originalPassword="user.originalPassword"
-        @saveSettings="saveUserSettings"
-      />
-        <!-- Error overlay -->
+  <div class="layout">
+    <!-- Sidebar -->
+    <StudentSidebar @changeComponent="setActiveComponent" />
+
+    <!-- Main content area -->
+    <div class="student-view">
+      <Calendar :exam-dates="exams" v-if="activeComponent === 'calendar'" />
+      <ExamsGrid :exams="exams" v-if="activeComponent === 'calendar'" />
+      <ComponentSettings v-if="activeComponent === 'settings'" :username="user.username" :role="user.role"
+        :email="user.email" :userId="userId" />
+      <!-- Error overlay -->
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
           <div class="error-header">
             <div @click="errorMessage = null" class="error-close-btn">
-            ✖
+              ✖
             </div>
           </div>
           <span class="error-message">{{ errorMessage }}</span>
           <button @click="errorMessage = null" class="error-ok-btn">OK</button>
         </div>
       </div>
-      </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue'; 
-  import api from '@/services/api'; 
-  import Calendar from '@/components/Calendar.vue';
-  import ExamsGrid from '@/components/ExamsGrid.vue';
-  import ComponentSettings from '@/components/ComponentSettings.vue'
-  import StudentSidebar from '@/components/StudentSidebar.vue';
-  import { useRouter } from 'vue-router';
-  
-  const activeComponent = ref('calendar');
-  const exams = ref([]);
-  const userId = ref(null);
-  const router = useRouter();
-  const errorMessage = ref(null);
-  const user = ref({
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import api from '@/services/api';
+import Calendar from '@/components/Calendar.vue';
+import ExamsGrid from '@/components/ExamsGrid.vue';
+import ComponentSettings from '@/components/ComponentSettings.vue'
+import StudentSidebar from '@/components/StudentSidebar.vue';
+import { useRouter } from 'vue-router';
+
+const activeComponent = ref('calendar');
+const exams = ref([]);
+const userId = ref(null);
+const router = useRouter();
+const errorMessage = ref(null);
+const user = ref({
   username: '',
   role: '',
   email: '',
-  password: '',
-  originalPassword: '', 
 });
-
-
 
 async function fetchUserData() {
   try {
@@ -63,7 +53,6 @@ async function fetchUserData() {
       username: response.data.userName,
       role: response2.data.role,
       email: response.data.email,
-      originalPassword: '', 
     };
   } catch (error) {
     const errorMessage = getErrorMessage(error);
@@ -71,99 +60,78 @@ async function fetchUserData() {
   }
 }
 
-async function saveUserSettings(updatedUser) {
-  try {
-    const payload = {
-      UserID: userId.value, 
-      Password: updatedUser.password,
-    };
-
-    await api.put(`/Users/PutPassword/${userId.value}`, payload);
-
-    user.value.originalPassword = updatedUser.password;
-
-    showError('Parola a fost schimbată cu succes!');
-  } catch (error) {
-    const errorMessage = getErrorMessage(error);
-    showError('Eroare la schimbarea parolei: ' + errorMessage);
+onMounted(() => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user) {
+    userId.value = user.userId;
+    fetchExams();
+    fetchUserData();
+  } else {
+    router.push({ name: 'LoginView' });
   }
-}
-  
-  onMounted(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-      userId.value = user.userId;
-      fetchExams();
-      fetchUserData();
-    } else {
-      router.push({ name: 'LoginView' });
-    }
-  });
+});
 
-  function setActiveComponent(componentName) {
+function setActiveComponent(componentName) {
   activeComponent.value = componentName;
 }
 
-  function showError(message) {
+function showError(message) {
   errorMessage.value = message;
 }
-  
-  async function fetchExams() {
-    try {
-      const response = await api.get(`/exams/GetByUserID${userId.value}`);
-      exams.value = response.data; 
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      showError('Eroare la preluarea examenelor: ', error);
-    }
-  }
 
-  function getErrorMessage(error) {
+async function fetchExams() {
+  try {
+    const response = await api.get(`/exams/GetByUserID${userId.value}`);
+    exams.value = response.data;
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    showError('Eroare la preluarea examenelor: ' + errorMessage);
+  }
+}
+
+function getErrorMessage(error) {
   if (error.response) {
-    return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
+    return error.response.data.message || error.response.statusText;
   } else if (error.request) {
     return 'Eroare de rețea: Nu am putut să te conectăm la server.';
   } else {
     return ` ${error.message}`;
   }
 }
-  </script>
-  <style scoped>
-  .layout {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: row;
-    background-color: #EAEAEA;
-    overflow: hidden;
-  }
-  
-  .student-view {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 20px;
-    margin-left: 1rem;
-    overflow-y: auto; 
-    height: 100%; 
-  }
-  
-  .student-view > * + * {
-    margin-top: 1.5rem;
-  }
-  
-  .student-view > * {
-    flex: 1 1 auto; 
-    width: 100%;
-    max-height: calc(100vh - 100px); 
-    min-height: 150px;  
-  }
-  
-  .error-overlay {
+</script>
+<style scoped>
+.layout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  background-color: #EAEAEA;
+  overflow: hidden;
+}
+
+.student-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px;
+  margin-left: 1rem;
+  overflow-y: auto;
+  height: 100%;
+}
+
+
+.student-view>* {
+  flex: 1 1 auto;
+  width: 100%;
+  max-height: calc(100vh - 100px);
+  min-height: 150px;
+}
+
+.error-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -191,12 +159,12 @@ async function saveUserSettings(updatedUser) {
 .error-header {
   position: relative;
   width: 100%;
-  margin-top: 30px; 
+  margin-top: 30px;
 }
 
 .error-close-btn {
   position: absolute;
-  top: -40px; 
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   background-color: red;
@@ -233,6 +201,4 @@ async function saveUserSettings(updatedUser) {
 .error-ok-btn:hover {
   background-color: #f0f0f0;
 }
-
-  </style>
-  
+</style>

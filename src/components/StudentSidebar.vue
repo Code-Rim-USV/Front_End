@@ -25,15 +25,28 @@
           <span>Deconectare</span>
         </div>
       </div>
+    <confirm-dialog
+      :show="showLogoutConfirm"
+      title="Confirmare Deconectare"
+      message="Sunteți sigur că doriți să vă deconectați?"
+      @confirm="confirmLogout"
+      @cancel="showLogoutConfirm = false"
+    />
   </div>
 </template>
 
 <script>
+import ConfirmDialog from './ConfirmDialog.vue'
+
 export default {
   name: "StudentSidebarComponent",
+  components: {
+    ConfirmDialog
+  },
   data() {
     return {
       activeItem: "calendar",
+      showLogoutConfirm: false
     };
   },
     methods: {
@@ -42,9 +55,12 @@ export default {
         this.$emit('changeComponent', tab);
       },
       logout() {
-        localStorage.removeItem('user');  
-        this.$router.push({ name: 'LoginView' });  
+        this.showLogoutConfirm = true;
       },
+      confirmLogout() {
+        localStorage.removeItem('user');
+        this.$router.push({ name: 'LoginView' });
+      }
     },
   };
 </script>

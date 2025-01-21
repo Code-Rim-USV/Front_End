@@ -7,35 +7,23 @@
       <ExamsGrid :exams="exams" v-if="activeComponent === 'calendar'" />
 
       <!-- Exam Scheduling components -->
-      <ExamRequestsForm 
-        v-if="activeComponent === 'examScheduling'" 
-        :materials="materials" 
-        @request-added="handleRequestAdded"
-      />
-      <GroupLeaderExamRequestsGrid 
-        ref="examRequestsGrid"
-        :exams="examRequestsPending"
-        v-if="activeComponent === 'examScheduling'" 
-      />
+      <ExamRequestsForm v-if="activeComponent === 'examScheduling'" :materials="materials"
+        @request-added="handleRequestAdded" />
+      <GroupLeaderExamRequestsGrid ref="examRequestsGrid" :exams="examRequestsPending"
+        v-if="activeComponent === 'examScheduling'" />
 
       <!-- Rejected Exam grid -->
       <RejectedExamsGrid :rejectedExams="examRequestsRejected" v-if="activeComponent === 'rejectSchedules'" />
 
-      <ComponentSettings
-        v-if="activeComponent === 'settings'"
-        :username="user.username"
-        :role="user.role"
-        :email="user.email"
-        :originalPassword="user.originalPassword"
-        @saveSettings="saveUserSettings"
-      />
+      <ComponentSettings v-if="activeComponent === 'settings'" :username="user.username" :role="user.role"
+        :email="user.email" :userId="userId" />
 
 
       <div v-if="errorMessage" class="error-overlay">
         <div class="error-content">
           <div class="error-header">
             <div @click="errorMessage = null" class="error-close-btn">
-            ✖
+              ✖
             </div>
           </div>
           <span class="error-message">{{ errorMessage }}</span>
@@ -71,8 +59,6 @@ const user = ref({
   username: '',
   role: '',
   email: '',
-  password: '',
-  originalPassword: '', 
 });
 
 async function fetchUserData() {
@@ -83,29 +69,10 @@ async function fetchUserData() {
       username: response.data.userName,
       role: response2.data.role,
       email: response.data.email,
-      originalPassword: '', 
     };
   } catch (error) {
     const errorMessage = getErrorMessage(error);
     showError('Eroare la preluarea datelor utilizatorului: ' + errorMessage);
-  }
-}
-
-async function saveUserSettings(updatedUser) {
-  try {
-    const payload = {
-      UserID: userId.value, // `userId` is already obtained during the FE initialization
-      Password: updatedUser.password,
-    };
-
-    await api.put(`/Users/PutPassword/${userId.value}`, payload);
-
-    user.value.originalPassword = updatedUser.password;
-
-    showError('Parola a fost schimbată cu succes!');
-  } catch (error) {
-    const errorMessage = getErrorMessage(error);
-    showError('Eroare la schimbarea parolei: ' + errorMessage);
   }
 }
 
@@ -137,16 +104,16 @@ function showError(message) {
 }
 
 function startPolling() {
-  stopPolling(); 
+  stopPolling();
   pollingInterval = setInterval(() => {
     if (activeComponent.value === 'calendar') {
       fetchExams();
     } else if (activeComponent.value === 'examScheduling') {
       fetchExamRequests();
-    }else if(activeComponent.value ==='rejectSchedules'){
+    } else if (activeComponent.value === 'rejectSchedules') {
       fetchExamRequestsRejected();
     }
-  }, 120000); 
+  }, 120000);
 }
 
 function stopPolling() {
@@ -157,7 +124,7 @@ function stopPolling() {
 }
 
 watch(activeComponent, () => {
-  startPolling(); 
+  startPolling();
 });
 
 async function fetchExams() {
@@ -166,7 +133,8 @@ async function fetchExams() {
     exams.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea examenelor: ' + errorMessage);  }
+    showError('Eroare la preluarea examenelor: ' + errorMessage);
+  }
 }
 
 async function fetchExamRequests() {
@@ -185,7 +153,7 @@ async function fetchExamRequestsRejected() {
     examRequestsRejected.value = response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
-    showError('Eroare la preluarea cererilor respinse: ', error);
+    showError('Eroare la preluarea cererilor respinse: ', errorMessage);
   }
 }
 
@@ -204,11 +172,17 @@ async function fetchMaterials() {
 
 function getErrorMessage(error) {
   if (error.response) {
-    return `Eroare de server: ${error.response.data.message || error.response.statusText}`;
+    if (error.response.data && typeof error.response.data === 'string') {
+      return error.response.data;
+    }
+    if (error.response.data && error.response.data.message) {
+      return error.response.data.message;
+    }
+    return error.response.statusText;
   } else if (error.request) {
     return 'Eroare de rețea: Nu am putut să te conectăm la server.';
   } else {
-    return ` ${error.message}`;
+    return error.message;
   }
 }
 
@@ -245,11 +219,8 @@ const handleRequestAdded = () => {
   height: 100%;
 }
 
-.student-view > * + * {
-  margin-top: 1.5rem;
-}
 
-.student-view > * {
+.student-view>* {
   flex: 1 1 auto;
   width: 100%;
   max-height: 100vh;
@@ -284,12 +255,12 @@ const handleRequestAdded = () => {
 .error-header {
   position: relative;
   width: 100%;
-  margin-top: 30px; 
+  margin-top: 30px;
 }
 
 .error-close-btn {
   position: absolute;
-  top: -40px; 
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   background-color: red;
@@ -326,6 +297,4 @@ const handleRequestAdded = () => {
 .error-ok-btn:hover {
   background-color: #f0f0f0;
 }
-
-
 </style>
